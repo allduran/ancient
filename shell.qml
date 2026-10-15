@@ -4,6 +4,7 @@ import Quickshell.Io
 import QtQuick
 import "modules/bar/"
 import "modules/notifications"
+import "modules/capture"
 import "services"
 
 ShellRoot {
@@ -22,6 +23,9 @@ ShellRoot {
                 visible: root.barVisible
             }
             WindowList {
+                modelData: perScreen.modelData
+            }
+            RegionSelector {
                 modelData: perScreen.modelData
             }
         }
@@ -43,6 +47,29 @@ ShellRoot {
         target: "notifs"
         function clear(): void {
             Notifs.clearAll();
+        }
+    }
+
+    // duran ipc shot_* / rec_*
+    IpcHandler {
+        target: "capture"
+        function screen(): void {
+            Capture.run("screen");
+        }
+        function region(): void {
+            Capture.startSelect("area");
+        }
+        function window(): void {
+            Capture.run("window");
+        }
+        function record(): void {
+            Capture.startSelect("record-area");
+        }
+        function recordScreen(): void {
+            Capture.run("record-screen");
+        }
+        function recordSound(): void {
+            Capture.run("record-sound");
         }
     }
 }

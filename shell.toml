@@ -5,12 +5,18 @@ version = "0.1.0"
 engine = "quickshell"
 
 [packages]
-repo = ["quickshell", "networkmanager", "upower", "pipewire"]
+repo = ["quickshell", "networkmanager", "upower", "pipewire", "grim", "slurp", "wl-clipboard", "wf-recorder", "jq", "libnotify"]
 aur = []
 
 [ipc]
 bar = "qs -c ancient ipc call bar toggle"
 notifs_clear = "qs -c ancient ipc call notifs clear"
+shot_screen = "qs -c ancient ipc call capture screen"
+shot_region = "qs -c ancient ipc call capture region"
+shot_window = "qs -c ancient ipc call capture window"
+rec_region  = "qs -c ancient ipc call capture record"
+rec_screen  = "qs -c ancient ipc call capture recordScreen"
+rec_sound   = "qs -c ancient ipc call capture recordSound"
 
 [conflicts]
 shells = []
