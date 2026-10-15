@@ -165,7 +165,7 @@ PanelWindow {
                         rightMargin: 8
                         verticalCenter: parent.verticalCenter
                     }
-                    text: list.numerals[rowItem.wsId - 1] ?? String(rowItem.wsId)
+                    text: rowItem.wsId < 0 ? "S" : (list.numerals[rowItem.wsId - 1] ?? String(rowItem.wsId))
                     color: Theme.accentLight
                     font.pixelSize: 11
                     font.bold: true

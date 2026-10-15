@@ -438,7 +438,7 @@ PanelWindow {
 
             // ── Izquierda: sugeridas ──
             Rectangle {
-                id: left
+                id: leftPane
                 anchors {
                     top: parent.top
                     bottom: parent.bottom
@@ -520,7 +520,7 @@ PanelWindow {
                             required property int index
                             readonly property bool on: armory.tab === 0 && armory.catIndex === index
                             x: 6
-                            width: left.width - 12
+                            width: leftPane.width - 12
                             height: 26
                             color: on ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.18) : "transparent"
                             Rectangle {
@@ -567,7 +567,7 @@ PanelWindow {
 
             // ── Derecha: tooltip ──
             Rectangle {
-                id: right
+                id: rightPane
                 anchors {
                     top: parent.top
                     bottom: parent.bottom
@@ -722,8 +722,8 @@ PanelWindow {
                 anchors {
                     top: parent.top
                     bottom: parent.bottom
-                    left: left.right
-                    right: right.left
+                    left: leftPane.right
+                    right: rightPane.left
                 }
 
                 TexturePanel {

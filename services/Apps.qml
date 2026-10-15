@@ -47,9 +47,20 @@ Singleton {
         }
     ]
 
-    // Categorías del .desktop como array JS normal
+    // Convierte cualquier lista de Qt (o texto "A;B;") en un array JS normal
+    function toArray(x) {
+        if (!x)
+            return [];
+        if (typeof x === "string")
+            return x.split(";").filter(s => s !== "");
+        const out = [];
+        for (let i = 0; i < x.length; i++)
+            out.push(String(x[i]));
+        return out;
+    }
+
     function cats(e) {
-        return e && e.categories ? Array.from(e.categories) : [];
+        return e ? toArray(e.categories) : [];
     }
 
     function inCategory(e, cat) {
@@ -85,7 +96,7 @@ Singleton {
                 return 0;
             if (n.includes(q))
                 return 1;
-            const extra = ((e.genericName || "") + " " + (e.comment || "") + " " + (e.keywords || []).join(" ")).toLowerCase();
+            const extra = ((e.genericName || "") + " " + (e.comment || "") + " " + toArray(e.keywords).join(" ")).toLowerCase();
             return extra.includes(q) ? 2 : 9;
         };
         return list.map(e => ({
@@ -105,7 +116,7 @@ Singleton {
     // Color estable por app (siempre el mismo para la misma app)
     function color(e) {
         const pal = Theme.playerColors.concat(Theme.pinnedColors);
-        if (!e)
+        if (!e || !e.id)
             return pal[0];
         let h = 0;
         for (const ch of e.id)
