@@ -6,8 +6,10 @@ import "modules/bar/"
 import "modules/notifications"
 import "modules/capture"
 import "modules/osd"
-import "services"
 import "modules/armory"
+import "modules/lock"
+import "modules/session"
+import "services"
 import "config"
 
 ShellRoot {
@@ -38,6 +40,8 @@ ShellRoot {
     NotificationPopups {}
     Osd {}
     Armory {}
+    LockScreen {}
+    SessionMenu {}
 
     // duran ipc bar
     IpcHandler {
@@ -120,6 +124,22 @@ ShellRoot {
         target: "launcher"
         function toggle(): void {
             ShellState.armoryOpen = !ShellState.armoryOpen;
+        }
+    }
+
+    // duran ipc lock
+    IpcHandler {
+        target: "lock"
+        function lock(): void {
+            Session.lock();
+        }
+    }
+
+    // duran ipc session
+    IpcHandler {
+        target: "session"
+        function open(): void {
+            Session.menuOpen = !Session.menuOpen;
         }
     }
 }

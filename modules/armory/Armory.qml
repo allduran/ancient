@@ -68,23 +68,13 @@ PanelWindow {
         {
             name: "Bloquear",
             hint: "SESIÓN",
-            run: () => Quickshell.execDetached(["loginctl", "lock-session"])
+            run: () => Session.lock()
         },
         {
-            name: "Suspender",
+            name: "Abandonar la partida…",
             hint: "SESIÓN",
-            run: () => Quickshell.execDetached(["systemctl", "suspend"])
+            run: () => Session.menuOpen = true
         },
-        {
-            name: "Reiniciar",
-            hint: "SESIÓN",
-            run: () => Quickshell.execDetached(["systemctl", "reboot"])
-        },
-        {
-            name: "Apagar",
-            hint: "SESIÓN",
-            run: () => Quickshell.execDetached(["systemctl", "poweroff"])
-        }
     ]
 
     readonly property var items: tab === 0 ? Apps.search(query, Apps.categories[catIndex]) : actionList.filter(a => a.name.toLowerCase().includes(query.trim().toLowerCase()))
@@ -393,24 +383,16 @@ PanelWindow {
                 }
                 QuickButton {
                     text: "Bloquear"
-                    onClicked: armory.runAfterClose(() => Quickshell.execDetached(["loginctl", "lock-session"]))
+                    onClicked: armory.runAfterClose(() => Session.lock())
                 }
                 QuickButton {
                     text: "Suspender"
-                    onClicked: armory.runAfterClose(() => Quickshell.execDetached(["systemctl", "suspend"]))
+                    onClicked: armory.runAfterClose(() => Session.suspend())
                 }
                 QuickButton {
-                    text: "Cerrar sesión"
-                    onClicked: armory.runAfterClose(() => Quickshell.execDetached(["loginctl", "terminate-user", Quickshell.env("USER")]))
-                }
-                QuickButton {
-                    text: "Reiniciar"
-                    onClicked: armory.runAfterClose(() => Quickshell.execDetached(["systemctl", "reboot"]))
-                }
-                QuickButton {
-                    text: "Apagar"
+                    text: "Abandonar…"
                     danger: true
-                    onClicked: armory.runAfterClose(() => Quickshell.execDetached(["systemctl", "poweroff"]))
+                    onClicked: armory.runAfterClose(() => Session.menuOpen = true)
                 }
             }
 

@@ -50,17 +50,6 @@ Rectangle {
         color: Qt.rgba(1, 1, 1, p.empty ? 0.03 : 0.14)
     }
 
-    // Separador derecho
-    Rectangle {
-        anchors {
-            right: parent.right
-            top: parent.top
-            bottom: parent.bottom
-        }
-        width: 1
-        color: Theme.edgeDark
-    }
-
     Image {
         anchors.centerIn: parent
         width: 24
