@@ -1,6 +1,6 @@
 import Quickshell
 import QtQuick
-import qs.config
+import "../../config"
 
 Text {
     // Reloj del sistema; se actualiza cada minuto

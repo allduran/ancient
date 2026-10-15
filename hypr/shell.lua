@@ -5,9 +5,9 @@
 hl.layer_rule({ match = { namespace = "ancient-.*" }, no_anim = true })
 
 return {
-    theme = {
-        accent = "c0caf5", accent2 = "7aa2f7", accent3 = "bb9af7",
-        onAccent = "16161e", inactive = "16161e", outline = "414868", bg = "1a1b26",
-        gapsIn = 5, gapsOut = 10, animations = true, blur = true, vrr = 0,
+        theme = {
+        accent = "c9a45c", accent2 = "8fc27f", accent3 = "c8463a",
+        onAccent = "0a0c0e", inactive = "3b3428", outline = "4a3f2c", bg = "0a0c0e",
+        gapsIn = 6, gapsOut = 12, animations = true, blur = true, vrr = 0,
     },
 }

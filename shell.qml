@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "modules/bar/"
+import "config"
 
 ShellRoot {
     id: root
@@ -11,12 +12,8 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
 
-        Variants {
-            model: Quickshell.screens
-
-            Bar {
-                visible: root.barVisible
-            }
+        Bar {
+            visible: root.barVisible
         }
     }
 
