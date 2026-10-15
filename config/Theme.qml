@@ -50,4 +50,7 @@ Singleton {
     readonly property color dialTop: "#2a2519"
     readonly property color dialBot: "#0b0a08"
     readonly property color moon: "#9fb8e0"
+
+    readonly property int notifWidth: 340
+    readonly property int notifTimeout: 6000    // ms que dura un popup
 }

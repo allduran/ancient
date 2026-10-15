@@ -1,6 +1,6 @@
 [shell]
 name = "ancient"
-description = ""
+description = "Dota 2–inspired Quickshell shell for Hyprland. Floating windows."
 version = "0.1.0"
 engine = "quickshell"
 

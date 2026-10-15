@@ -26,7 +26,7 @@ PanelWindow {
     visible: ShellState.windowListOpen && windows.length > 0
 
     // Ventanas de ESTE monitor
-    readonly property var windows: Hyprland.toplevels.values.filter(t => t.workspace && t.workspace.monitor && t.workspace.monitor.name === list.screen.name)
+    readonly property var windows: Hyprland.toplevels.values.filter(t => t.workspace && t.workspace.monitor && t.workspace.monitor.name === list.modelData.name)
 
     readonly property var numerals: ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
 

@@ -3,6 +3,8 @@
 
 -- Paneles del shell sin animación de Hyprland (el shell los anima)
 hl.layer_rule({ match = { namespace = "ancient-.*" }, no_anim = true })
+-- Sin autotiling: todas las ventanas se abren flotantes
+hl.window_rule({ match = { class = ".*" }, float = false })
 
 return {
     theme = {

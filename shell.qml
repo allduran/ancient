@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "modules/bar/"
+import "modules/notifications"
 import "services"
 
 ShellRoot {
@@ -25,6 +26,9 @@ ShellRoot {
             }
         }
     }
+
+    // Popups de notificación (uno solo, en el monitor enfocado)
+    NotificationPopups {}
 
     // duran ipc bar
     IpcHandler {
