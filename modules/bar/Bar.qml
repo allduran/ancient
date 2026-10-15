@@ -24,6 +24,7 @@ PanelWindow {
         item: strip
         Region {
             item: center
+            intersection: Intersection.Combine   // sumar a la franja, no intersecar
         }
     }
 
@@ -42,6 +43,33 @@ PanelWindow {
             anchors.fill: parent
             source: "../../assets/textures/strip-stone.png"
             fillMode: Image.Tile        // repite la textura en horizontal
+        }
+
+        // Botón: mostrar/ocultar la lista de ventanas
+        Rectangle {
+            anchors {
+                left: parent.left
+                leftMargin: 6
+                verticalCenter: parent.verticalCenter
+            }
+            width: 26
+            height: 22
+            color: ShellState.windowListOpen ? Theme.frameTop : Theme.slot
+            border.width: 1
+            border.color: ShellState.windowListOpen ? Theme.gold : Theme.edge
+
+            Text {
+                anchors.centerIn: parent
+                text: "☰"
+                color: ShellState.windowListOpen ? Theme.goldLight : Theme.textSoft
+                font.pixelSize: 13
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: ShellState.windowListOpen = !ShellState.windowListOpen
+            }
         }
 
         // Filo bronce

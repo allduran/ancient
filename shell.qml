@@ -11,8 +11,17 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
 
-        Bar {
-            visible: root.barVisible
+        Scope {
+            id: perScreen
+            required property var modelData
+
+            Bar {
+                modelData: perScreen.modelData
+                visible: root.barVisible
+            }
+            WindowList {
+                modelData: perScreen.modelData
+            }
         }
     }
 
