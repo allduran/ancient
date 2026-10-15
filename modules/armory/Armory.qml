@@ -71,6 +71,11 @@ PanelWindow {
             run: () => Session.lock()
         },
         {
+            name: "Suspender",
+            hint: "SESIÓN",
+            run: () => Session.suspend()
+        },
+        {
             name: "Abandonar la partida…",
             hint: "SESIÓN",
             run: () => Session.menuOpen = true

@@ -393,16 +393,6 @@ Item {
                         glyph: "☾",
                         danger: false,
                         run: () => Session.suspend()
-                    },
-                    {
-                        glyph: "↻",
-                        danger: false,
-                        run: () => Session.reboot()
-                    },
-                    {
-                        glyph: "⏻",
-                        danger: true,
-                        run: () => Session.poweroff()
                     }
                 ]
                 Rectangle {
