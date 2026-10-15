@@ -27,7 +27,7 @@ Row {
             required property int index
             readonly property var entry: DesktopEntries.heuristicLookup(modelData)
             readonly property var win: root.windowFor(modelData)
-            readonly property color appColor: Theme.direColors[index % Theme.direColors.length]
+            readonly property color appColor: Theme.pinnedColors[index % Theme.pinnedColors.length]
 
             icon: Quickshell.iconPath(entry ? entry.icon : modelData, "application-x-executable")
             tint: appColor

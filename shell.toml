@@ -22,6 +22,8 @@ volume_down = "qs -c ancient ipc call osd volumeDown"
 volume_mute = "qs -c ancient ipc call osd mute"
 bright_up   = "qs -c ancient ipc call osd brightnessUp"
 bright_down = "qs -c ancient ipc call osd brightnessDown"
+mode     = "qs -c ancient ipc call mode toggle"
+mode_set = "qs -c ancient ipc call mode set <radiant|dire>"
 
 [conflicts]
 shells = []

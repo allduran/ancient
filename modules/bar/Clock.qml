@@ -70,7 +70,7 @@ Item {
         anchors.margins: 5
         radius: width / 2
         border.width: 2
-        border.color: Theme.gold
+        border.color: Theme.accent
         gradient: Gradient {
             GradientStop {
                 position: 0
@@ -160,7 +160,7 @@ Item {
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
             text: dial.isDay ? "☀" : "☾"
-            color: dial.isDay ? Theme.goldLight : Theme.moon
+            color: dial.isDay ? Theme.accentLight : Theme.moon
             font.pixelSize: 12
         }
         Text {

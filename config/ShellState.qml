@@ -7,4 +7,5 @@ import QtQuick
 Singleton {
     property bool windowListOpen: true
     property bool windowListCollapsed: false
+    property string mode: "radiant"      // "radiant" (general) | "dire" (juego)
 }

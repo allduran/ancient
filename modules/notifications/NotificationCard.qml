@@ -9,7 +9,7 @@ Item {
     id: card
     required property var notif
     readonly property bool critical: notif.urgency === NotificationUrgency.Critical
-    readonly property color accent: critical ? Theme.dire : Theme.radiant
+    readonly property color accent: critical ? Theme.danger : Theme.positive
     property real life: 1                     // 1 → 0 durante el cooldown
 
     implicitHeight: frame.height
@@ -116,7 +116,7 @@ Item {
                     }
                     text: (card.notif.appName || "Notification").toUpperCase()
                     elide: Text.ElideRight
-                    color: Theme.goldLight
+                    color: Theme.accentLight
                     font.pixelSize: 10
                     font.bold: true
                     font.letterSpacing: 1.5
@@ -129,7 +129,7 @@ Item {
                         verticalCenter: parent.verticalCenter
                     }
                     text: "✕"
-                    color: closeArea.containsMouse ? Theme.dire : Theme.textMute
+                    color: closeArea.containsMouse ? Theme.danger : Theme.textMute
                     font.pixelSize: 12
                     MouseArea {
                         id: closeArea
@@ -225,7 +225,7 @@ Item {
             Rectangle {
                 width: parent.width * card.life
                 height: 2
-                color: card.critical ? Theme.dire : Theme.gold
+                color: card.critical ? Theme.danger : Theme.accent
             }
         }
     }

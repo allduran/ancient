@@ -86,7 +86,7 @@ PanelWindow {
                 right: parent.right
             }
             height: 2
-            color: Theme.gold
+            color: Theme.accent
         }
 
         // Hueco con el icono
@@ -103,7 +103,7 @@ PanelWindow {
             Text {
                 anchors.centerIn: parent
                 text: osd.isVolume ? (osd.off ? "✕" : "♪") : "☀"
-                color: osd.off ? Theme.textMute : osd.isVolume ? Theme.text : Theme.goldLight
+                color: osd.off ? Theme.textMute : osd.isVolume ? Theme.text : Theme.accentLight
                 font.pixelSize: 18
                 font.bold: true
             }

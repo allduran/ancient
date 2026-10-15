@@ -118,7 +118,7 @@ PanelWindow {
                 Rectangle {
                     width: 2
                     height: parent.height
-                    color: Theme.gold
+                    color: Theme.accent
                     visible: rowItem.isActive
                 }
 
@@ -166,7 +166,7 @@ PanelWindow {
                         verticalCenter: parent.verticalCenter
                     }
                     text: list.numerals[rowItem.wsId - 1] ?? String(rowItem.wsId)
-                    color: Theme.goldLight
+                    color: Theme.accentLight
                     font.pixelSize: 11
                     font.bold: true
                 }

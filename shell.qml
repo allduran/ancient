@@ -94,4 +94,21 @@ ShellRoot {
             Brightness.down();
         }
     }
+
+    // duran ipc mode / mode_set
+    IpcHandler {
+        target: "mode"
+        function toggle(): void {
+            ShellState.mode = ShellState.mode === "dire" ? "radiant" : "dire";
+        }
+        function set(m: string): void {
+            // Acepta también los nombres de velvet: general → radiant, game → dire
+            if (m === "general")
+                m = "radiant";
+            if (m === "game")
+                m = "dire";
+            if (m === "radiant" || m === "dire")
+                ShellState.mode = m;
+        }
+    }
 }

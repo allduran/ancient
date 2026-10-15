@@ -43,7 +43,7 @@ PanelWindow {
 
         Image {
             anchors.fill: parent
-            source: "../../assets/textures/strip-stone.png"
+            source: "../../assets/textures/" + Theme.stripTexture
             fillMode: Image.Tile        // repite la textura en horizontal
         }
 
@@ -58,12 +58,12 @@ PanelWindow {
             height: 22
             color: ShellState.windowListOpen ? Theme.frameTop : Theme.slot
             border.width: 1
-            border.color: ShellState.windowListOpen ? Theme.gold : Theme.edge
+            border.color: ShellState.windowListOpen ? Theme.accent : Theme.edge
 
             Text {
                 anchors.centerIn: parent
                 text: "☰"
-                color: ShellState.windowListOpen ? Theme.goldLight : Theme.textSoft
+                color: ShellState.windowListOpen ? Theme.accentLight : Theme.textSoft
                 font.pixelSize: 13
             }
 
@@ -127,9 +127,9 @@ PanelWindow {
         // Notificaciones (rojo). Clic: borrarlas todas
         Shield {
             value: Notifs.count
-            topColor: Theme.direTop
-            bottomColor: Theme.direBot
-            accent: Theme.dire
+            topColor: Theme.dangerTop
+            bottomColor: Theme.dangerBot
+            accent: Theme.danger
             onClicked: Notifs.clearAll()
         }
 

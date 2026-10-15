@@ -60,17 +60,17 @@ Grid {
     Stat {
         label: "CPU"
         value: SysStats.cpu + "%"
-        valueColor: SysStats.cpu > 85 ? Theme.dire : Theme.text
+        valueColor: SysStats.cpu > 85 ? Theme.danger : Theme.text
     }
     Stat {
         label: "RAM"
         value: SysStats.ramPercent + "%"
-        valueColor: SysStats.ramPercent > 85 ? Theme.dire : Theme.text
+        valueColor: SysStats.ramPercent > 85 ? Theme.danger : Theme.text
     }
     Stat {
         label: "NET"
         value: SysStats.network
-        valueColor: SysStats.network === "Offline" ? Theme.dire : Theme.text
+        valueColor: SysStats.network === "Offline" ? Theme.danger : Theme.text
     }
 
     // ── Línea 2 ──
@@ -86,6 +86,6 @@ Grid {
         visible: root.hasBattery
         label: "BAT"
         value: (root.charging ? "⚡" : "") + root.batPct + "%"
-        valueColor: root.batPct < 15 && !root.charging ? Theme.dire : Theme.radiant
+        valueColor: root.batPct < 15 && !root.charging ? Theme.danger : Theme.positive
     }
 }

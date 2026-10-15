@@ -6,9 +6,9 @@ import "../../config"
 Item {
     id: shield
     property int value: 0
-    property color topColor: Theme.radiantTop
-    property color bottomColor: Theme.radiantBot
-    property color accent: Theme.radiant
+    property color topColor: Theme.positiveTop
+    property color bottomColor: Theme.positiveBot
+    property color accent: Theme.positive
     signal clicked
 
     width: Theme.shieldW

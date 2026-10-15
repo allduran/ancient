@@ -92,13 +92,13 @@ PanelWindow {
             width: 18
             height: 3
             y: parent.flipY ? 15 : 0
-            color: Theme.goldLight
+            color: Theme.accentLight
         }
         Rectangle {
             width: 3
             height: 18
             x: parent.flipX ? 15 : 0
-            color: Theme.goldLight
+            color: Theme.accentLight
         }
     }
 
@@ -181,7 +181,7 @@ PanelWindow {
                 anchors.fill: parent
                 color: "transparent"
                 border.width: 1
-                border.color: Theme.gold
+                border.color: Theme.accent
             }
 
             Bracket {
@@ -241,7 +241,7 @@ PanelWindow {
             x: mouse.mouseX
             width: 1
             height: root.height
-            color: Theme.goldLight
+            color: Theme.accentLight
             opacity: 0.35
         }
         Rectangle {
@@ -249,7 +249,7 @@ PanelWindow {
             y: mouse.mouseY
             width: root.width
             height: 1
-            color: Theme.goldLight
+            color: Theme.accentLight
             opacity: 0.35
         }
 
@@ -272,7 +272,7 @@ PanelWindow {
                     right: parent.right
                 }
                 height: 2
-                color: Theme.gold
+                color: Theme.accent
             }
             Text {
                 id: hint
