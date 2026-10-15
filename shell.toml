@@ -1,0 +1,22 @@
+[shell]
+name = "ancient"
+description = ""
+version = "0.1.0"
+engine = "quickshell"
+
+[packages]
+repo = ["quickshell"]
+aur = []
+
+[ipc]
+bar = "qs -c ancient ipc call bar toggle"
+
+[conflicts]
+shells = []
+
+[hooks]
+install = "hooks/install.sh"
+uninstall = "hooks/uninstall.sh"
+
+[hyprland]
+config = "hypr/shell.lua"     # duran la enlaza en ~/.config/hypr/shell.lua
