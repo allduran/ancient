@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "modules/bar/"
+import "services"
 
 ShellRoot {
     id: root
@@ -30,6 +31,14 @@ ShellRoot {
         target: "bar"
         function toggle(): void {
             root.barVisible = !root.barVisible;
+        }
+    }
+
+    // duran ipc notifs_clear
+    IpcHandler {
+        target: "notifs"
+        function clear(): void {
+            Notifs.clearAll();
         }
     }
 }

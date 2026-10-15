@@ -10,6 +10,7 @@ aur = []
 
 [ipc]
 bar = "qs -c ancient ipc call bar toggle"
+notifs_clear = "qs -c ancient ipc call notifs clear"
 
 [conflicts]
 shells = []

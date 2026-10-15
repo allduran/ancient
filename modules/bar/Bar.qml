@@ -1,6 +1,8 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
+import Quickshell.Hyprland
+import "../../services"
 import "../../config"
 
 PanelWindow {
@@ -104,7 +106,24 @@ PanelWindow {
         spacing: 4
 
         Workspaces {}
+
+        // Ventanas abiertas (verde). Clic: mostrar/ocultar la lista
+        Shield {
+            value: Hyprland.toplevels.values.length
+            onClicked: ShellState.windowListOpen = !ShellState.windowListOpen
+        }
+
         Clock {}
+
+        // Notificaciones (rojo). Clic: borrarlas todas
+        Shield {
+            value: Notifs.count
+            topColor: Theme.direTop
+            bottomColor: Theme.direBot
+            accent: Theme.dire
+            onClicked: Notifs.clearAll()
+        }
+
         PinnedApps {}
     }
 }
