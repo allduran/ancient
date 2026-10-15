@@ -74,6 +74,15 @@ PanelWindow {
             }
         }
 
+        // Stats (esquina derecha)
+        Stats {
+            anchors {
+                right: parent.right
+                rightMargin: 10
+                verticalCenter: parent.verticalCenter
+            }
+        }
+
         // Filo bronce
         Rectangle {
             anchors {

@@ -5,7 +5,7 @@ version = "0.1.0"
 engine = "quickshell"
 
 [packages]
-repo = ["quickshell"]
+repo = ["quickshell", "networkmanager", "upower", "pipewire"]
 aur = []
 
 [ipc]
