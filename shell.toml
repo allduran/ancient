@@ -5,7 +5,7 @@ version = "0.1.0"
 engine = "quickshell"
 
 [packages]
-repo = ["quickshell", "networkmanager", "upower", "pipewire", "grim", "slurp", "wl-clipboard", "wf-recorder", "jq", "libnotify"]
+repo = ["quickshell", "networkmanager", "upower", "pipewire", "grim", "slurp", "wl-clipboard", "wf-recorder", "jq", "libnotify", "brightnessctl"]
 aur = []
 
 [ipc]
@@ -17,6 +17,11 @@ shot_window = "qs -c ancient ipc call capture window"
 rec_region  = "qs -c ancient ipc call capture record"
 rec_screen  = "qs -c ancient ipc call capture recordScreen"
 rec_sound   = "qs -c ancient ipc call capture recordSound"
+volume_up   = "qs -c ancient ipc call osd volumeUp"
+volume_down = "qs -c ancient ipc call osd volumeDown"
+volume_mute = "qs -c ancient ipc call osd mute"
+bright_up   = "qs -c ancient ipc call osd brightnessUp"
+bright_down = "qs -c ancient ipc call osd brightnessDown"
 
 [conflicts]
 shells = []

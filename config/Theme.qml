@@ -53,4 +53,7 @@ Singleton {
 
     readonly property int notifWidth: 340
     readonly property int notifTimeout: 6000    // ms que dura un popup
+
+    readonly property color manaTop: "#4f7fd0"
+    readonly property color manaBot: "#2b4e96"
 }

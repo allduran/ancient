@@ -5,6 +5,7 @@ import QtQuick
 import "modules/bar/"
 import "modules/notifications"
 import "modules/capture"
+import "modules/osd"
 import "services"
 
 ShellRoot {
@@ -33,6 +34,7 @@ ShellRoot {
 
     // Popups de notificación (uno solo, en el monitor enfocado)
     NotificationPopups {}
+    Osd {}
 
     // duran ipc bar
     IpcHandler {
@@ -70,6 +72,26 @@ ShellRoot {
         }
         function recordSound(): void {
             Capture.run("record-sound");
+        }
+    }
+
+    // duran ipc volume_* / bright_*
+    IpcHandler {
+        target: "osd"
+        function volumeUp(): void {
+            Audio.up();
+        }
+        function volumeDown(): void {
+            Audio.down();
+        }
+        function mute(): void {
+            Audio.toggleMute();
+        }
+        function brightnessUp(): void {
+            Brightness.up();
+        }
+        function brightnessDown(): void {
+            Brightness.down();
         }
     }
 }

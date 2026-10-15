@@ -1,4 +1,3 @@
-import Quickshell.Services.Pipewire
 import Quickshell.Services.UPower
 import QtQuick
 import "../../config"
@@ -11,15 +10,10 @@ Grid {
     columnSpacing: 14
     rowSpacing: 0
 
-    readonly property var sink: Pipewire.defaultAudioSink
     readonly property var bat: UPower.displayDevice
     readonly property bool hasBattery: bat !== null && bat.isLaptopBattery
     readonly property int batPct: !bat ? 0 : Math.round(bat.percentage > 1 ? bat.percentage : bat.percentage * 100)
     readonly property bool charging: hasBattery && bat.state === UPowerDeviceState.Charging
-
-    PwObjectTracker {
-        objects: [root.sink]
-    }    // necesario para leer el volumen
 
     // Una estadística: etiqueta apagada + valor
     component Stat: Item {
@@ -83,16 +77,10 @@ Grid {
     Stat {
         label: "VOL"
         interactive: true
-        value: !root.sink || !root.sink.audio ? "—" : root.sink.audio.muted ? "MUTE" : Math.round(root.sink.audio.volume * 100) + "%"
-        valueColor: root.sink && root.sink.audio && root.sink.audio.muted ? Theme.textMute : Theme.text
-        onClicked: if (root.sink && root.sink.audio)
-            root.sink.audio.muted = !root.sink.audio.muted
-        onScrolled: delta => {
-            if (!root.sink || !root.sink.audio)
-                return;
-            const v = root.sink.audio.volume + (delta > 0 ? 0.05 : -0.05);
-            root.sink.audio.volume = Math.max(0, Math.min(1, v));
-        }
+        value: !Audio.ready ? "—" : Audio.muted ? "MUTE" : Math.round(Audio.volume * 100) + "%"
+        valueColor: Audio.muted ? Theme.textMute : Theme.text
+        onClicked: Audio.toggleMute()
+        onScrolled: delta => delta > 0 ? Audio.up() : Audio.down()
     }
     Stat {
         visible: root.hasBattery
