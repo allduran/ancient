@@ -2,6 +2,7 @@
 import Quickshell
 import Quickshell.Io
 import QtQuick
+import "modules/bar/"
 
 ShellRoot {
     id: root
@@ -10,19 +11,11 @@ ShellRoot {
     Variants {
         model: Quickshell.screens
 
-        PanelWindow {
-            required property var modelData
-            screen: modelData
-            visible: root.barVisible
-            anchors { top: true; left: true; right: true }
-            implicitHeight: 32
-            color: "#16161e"
+        Variants {
+            model: Quickshell.screens
 
-            Text {
-                anchors.centerIn: parent
-                text: "ancient"
-                color: "#c0caf5"
-                font.pixelSize: 14
+            Bar {
+                visible: root.barVisible
             }
         }
     }
@@ -30,6 +23,8 @@ ShellRoot {
     // duran ipc bar
     IpcHandler {
         target: "bar"
-        function toggle(): void { root.barVisible = !root.barVisible }
+        function toggle(): void {
+            root.barVisible = !root.barVisible;
+        }
     }
 }
