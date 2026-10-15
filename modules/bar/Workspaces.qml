@@ -3,11 +3,13 @@ import Quickshell.Hyprland
 import QtQuick
 import "../../config"
 
-BronzeFrame {
+Row {
     id: root
-    slantLeft: true
+    spacing: 0
 
-    readonly property var numerals: ["I", "II", "III", "IV", "V"]
+    readonly property var numerals: ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]
+    // Primer escritorio del grupo visible: 0 → 1–5, 5 → 6–10, …
+    readonly property int base: activeId > 0 ? Math.floor((activeId - 1) / 5) * 5 : 0
     readonly property int activeId: Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : 1
 
     function workspace(id) {
@@ -33,15 +35,16 @@ BronzeFrame {
 
         Portrait {
             required property int index
-            readonly property string appIcon: root.iconFor(root.workspace(index + 1))
+            readonly property int wsId: root.base + index + 1
+            readonly property string appIcon: root.iconFor(root.workspace(wsId))
 
             icon: appIcon
             empty: appIcon === ""
-            label: root.numerals[index]
-            active: root.activeId === index + 1
+            label: root.numerals[wsId - 1] ?? String(wsId)
+            active: root.activeId === wsId
             tint: Theme.playerColors[index]
             barColor: empty ? "transparent" : Theme.playerColors[index]
-            onClicked: Hyprland.dispatch('hl.dsp.focus({ workspace = "' + (index + 1) + '" })')
+            onClicked: Hyprland.dispatch('hl.dsp.focus({ workspace = "' + wsId + '" })')
         }
     }
 }

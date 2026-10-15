@@ -40,9 +40,14 @@ Singleton {
 
     // Medidas
     readonly property int stripHeight: 30
-    readonly property int portraitW: 52
-    readonly property int portraitH: 32
+    readonly property int portraitW: 54
+    readonly property int portraitH: 30     // igual que la franja
     readonly property int dialSize: 76
     readonly property int shieldW: 34
     readonly property int shieldH: 42
+
+    readonly property color label: "#4a463c"   // números romanos de retratos vacíos
+    readonly property color dialTop: "#2a2519"
+    readonly property color dialBot: "#0b0a08"
+    readonly property color moon: "#9fb8e0"
 }

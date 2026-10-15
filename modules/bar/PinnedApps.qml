@@ -3,9 +3,9 @@ import Quickshell.Wayland
 import QtQuick
 import "../../config"
 
-BronzeFrame {
+Row {
     id: root
-    slantLeft: false        // diagonal a la derecha
+    spacing: 0
 
     // Apps fijadas: nombre del .desktop (o parecido)
     property var apps: ["nemo", "foot", "zen", "spotify", "steam"]
@@ -35,11 +35,11 @@ BronzeFrame {
             active: win !== null && win.activated        // marco = ventana enfocada
 
             onClicked: {
-                if (win)
-                    win.activate();
-                    // abierta → la enfoca
-                else if (entry)
-                    entry.execute();         // cerrada → la lanza
+                if (win) {
+                    win.activate();      // abierta → la enfoca
+                } else if (entry) {
+                    entry.execute();     // cerrada → la lanza
+                }
             }
         }
     }
