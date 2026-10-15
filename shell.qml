@@ -3,7 +3,6 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "modules/bar/"
-import "config"
 
 ShellRoot {
     id: root

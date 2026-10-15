@@ -4,26 +4,45 @@ import Quickshell
 import QtQuick
 
 Singleton {
-    // Fondos
-    readonly property color panelTop: "#171b20"
-    readonly property color panelBot: "#0e1114"
-    readonly property color slot: "#0c0f12"
+    // Piedra / fondos
+    readonly property color stone: "#15181b"
+    readonly property color slot: "#0a0c0e"
 
-    // Bordes bronce
-    readonly property color edge: "#4a3f2c"
+    // Marcos de bronce
+    readonly property color frameTop: "#4a4232"
+    readonly property color frameBot: "#1c1914"
+    readonly property color frameEdge: "#8a7448"
+    readonly property color edge: "#6b5b3a"
     readonly property color edgeDim: "#3b3428"
     readonly property color edgeDark: "#050607"
 
     // Acentos
     readonly property color gold: "#c9a45c"
-    readonly property color radiant: "#8fc27f"   // verde: activo
-    readonly property color dire: "#c8463a"   // rojo: peligro
+    readonly property color goldLight: "#e6c77e"
+    readonly property color radiant: "#8fc27f"
+    readonly property color radiantTop: "#2e5226"
+    readonly property color radiantBot: "#14240f"
+    readonly property color dire: "#c8463a"
+    readonly property color direTop: "#5a1f18"
+    readonly property color direBot: "#26100c"
+    readonly property color day: "#e6b84e"
+    readonly property color night: "#1d3a66"
 
     // Texto
     readonly property color text: "#f2e6c8"
     readonly property color textSoft: "#d8cfba"
-    readonly property color textMute: "#a69e8c"
+    readonly property color textMute: "#8e8676"
+
+    // Colores de "jugador" para los escritorios 1–5
+    readonly property var playerColors: ["#3375ff", "#66ffbf", "#bf00bf", "#f3f00b", "#ff6b00"]
+    // Colores de las apps fijadas (lado derecho)
+    readonly property var direColors: ["#fe86c2", "#a1b447", "#65d9f7", "#008321", "#a46900"]
 
     // Medidas
-    readonly property int barHeight: 52
+    readonly property int stripHeight: 30
+    readonly property int portraitW: 52
+    readonly property int portraitH: 32
+    readonly property int dialSize: 76
+    readonly property int shieldW: 34
+    readonly property int shieldH: 42
 }
