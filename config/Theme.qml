@@ -22,7 +22,8 @@ Singleton {
             label: "#4a463c",
             dialTop: "#2a2519",
             dialBot: "#0b0a08",
-            stripTexture: "strip-stone.png"
+            stripTexture: "strip-stone.png",
+            panelTexture: "panel-stone.png"     // en radiant
         })
 
     readonly property var dire: ({
@@ -39,7 +40,8 @@ Singleton {
             label: "#4a3430",
             dialTop: "#2a1512",
             dialBot: "#0b0605",
-            stripTexture: "strip-lava.png"
+            stripTexture: "strip-lava.png",
+            panelTexture: "panel-lava.png"      // en dire
         })
 
     // Paleta activa
@@ -60,6 +62,7 @@ Singleton {
     readonly property color dialTop: p.dialTop
     readonly property color dialBot: p.dialBot
     readonly property string stripTexture: p.stripTexture
+    readonly property string panelTexture: p.panelTexture
 
     // ── Colores fijos (iguales en los dos modos) ──
     readonly property color positive: "#8fc27f"

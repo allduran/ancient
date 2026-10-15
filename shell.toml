@@ -24,6 +24,7 @@ bright_up   = "qs -c ancient ipc call osd brightnessUp"
 bright_down = "qs -c ancient ipc call osd brightnessDown"
 mode     = "qs -c ancient ipc call mode toggle"
 mode_set = "qs -c ancient ipc call mode set <radiant|dire>"
+launcher = "qs -c ancient ipc call launcher toggle"
 
 [conflicts]
 shells = []

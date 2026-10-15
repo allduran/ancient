@@ -7,6 +7,8 @@ import "modules/notifications"
 import "modules/capture"
 import "modules/osd"
 import "services"
+import "modules/armory"
+import "config"
 
 ShellRoot {
     id: root
@@ -35,6 +37,7 @@ ShellRoot {
     // Popups de notificación (uno solo, en el monitor enfocado)
     NotificationPopups {}
     Osd {}
+    Armory {}
 
     // duran ipc bar
     IpcHandler {
@@ -109,6 +112,14 @@ ShellRoot {
                 m = "dire";
             if (m === "radiant" || m === "dire")
                 ShellState.mode = m;
+        }
+    }
+
+    // duran ipc launcher
+    IpcHandler {
+        target: "launcher"
+        function toggle(): void {
+            ShellState.armoryOpen = !ShellState.armoryOpen;
         }
     }
 }

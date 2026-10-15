@@ -7,9 +7,6 @@ Row {
     id: root
     spacing: 0
 
-    // Apps fijadas: nombre del .desktop (o parecido)
-    property var apps: ["nemo", "foot", "zen", "spotify", "steam"]
-
     // Primera ventana abierta cuyo appId contiene la clave
     function windowFor(key) {
         const list = ToplevelManager.toplevels.values;
@@ -20,7 +17,7 @@ Row {
     }
 
     Repeater {
-        model: root.apps
+        model: ShellState.pinnedApps
 
         Portrait {
             required property string modelData
