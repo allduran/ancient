@@ -9,6 +9,8 @@ import "modules/osd"
 import "modules/armory"
 import "modules/lock"
 import "modules/session"
+import "modules/media"
+import "modules/hud"
 import "services"
 import "config"
 
@@ -33,6 +35,9 @@ ShellRoot {
             RegionSelector {
                 modelData: perScreen.modelData
             }
+            Hud {
+                modelData: perScreen.modelData
+            }
         }
     }
 
@@ -42,6 +47,7 @@ ShellRoot {
     Armory {}
     LockScreen {}
     SessionMenu {}
+    MediaPanel {}
 
     // duran ipc bar
     IpcHandler {
@@ -140,6 +146,23 @@ ShellRoot {
         target: "session"
         function open(): void {
             Session.menuOpen = !Session.menuOpen;
+        }
+    }
+
+    // duran ipc media_*
+    IpcHandler {
+        target: "media"
+        function toggle(): void {
+            Media.toggle();
+        }
+        function next(): void {
+            Media.next();
+        }
+        function previous(): void {
+            Media.previous();
+        }
+        function stop(): void {
+            Media.stop();
         }
     }
 }

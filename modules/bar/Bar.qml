@@ -49,6 +49,7 @@ PanelWindow {
 
         // Botón: mostrar/ocultar la lista de ventanas
         Rectangle {
+            id: listButton
             anchors {
                 left: parent.left
                 leftMargin: 6
@@ -71,6 +72,15 @@ PanelWindow {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: ShellState.windowListOpen = !ShellState.windowListOpen
+            }
+        }
+
+        // Música (solo aparece si suena algo)
+        MediaChip {
+            anchors {
+                left: listButton.right
+                leftMargin: 6
+                verticalCenter: parent.verticalCenter
             }
         }
 

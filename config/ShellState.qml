@@ -11,4 +11,6 @@ Singleton {
     property bool armoryOpen: false
     property var pinnedApps: ["nemo", "foot", "zen", "spotify", "steam"]
     property var recentApps: []          // ids de las últimas apps lanzadas (máx. 8)
+    property bool mediaOpen: false
+    property string terminal: "foot"     // terminal para "Quick buy" (actualizar)
 }

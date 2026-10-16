@@ -5,7 +5,7 @@ version = "0.1.0"
 engine = "quickshell"
 
 [packages]
-repo = ["quickshell", "networkmanager", "upower", "pipewire", "grim", "slurp", "wl-clipboard", "wf-recorder", "jq", "libnotify", "brightnessctl"]
+repo = ["quickshell", "networkmanager", "upower", "pipewire", "grim", "slurp", "wl-clipboard", "wf-recorder", "jq", "libnotify", "brightnessctl", "pacman-contrib"]
 aur = []
 
 [ipc]
@@ -27,6 +27,10 @@ mode_set = "qs -c ancient ipc call mode set <radiant|dire>"
 launcher = "qs -c ancient ipc call launcher toggle"
 lock    = "qs -c ancient ipc call lock lock"
 session = "qs -c ancient ipc call session open"
+media_toggle = "qs -c ancient ipc call media toggle"
+media_next   = "qs -c ancient ipc call media next"
+media_prev   = "qs -c ancient ipc call media previous"
+media_stop   = "qs -c ancient ipc call media stop"
 
 [conflicts]
 shells = []

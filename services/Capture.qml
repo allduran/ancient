@@ -62,9 +62,30 @@ Singleton {
         onExited: code => {
             if (code === 0)
                 root.run("record-area", "");
-                // sí → el script la para
             else
+                // sí → el script la para
                 root.openSelector("record-area");          // no → elegir zona
         }
+    }
+
+    // ¿Grabando? (para el buff REC del HUD)
+    property bool recording: false
+    property real recStart: 0
+
+    Process {
+        id: recPoll
+        command: ["pgrep", "-x", "wf-recorder"]
+        onExited: code => {
+            const r = code === 0;
+            if (r && !root.recording)
+                root.recStart = Date.now();
+            root.recording = r;
+        }
+    }
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        onTriggered: recPoll.running = true
     }
 }
