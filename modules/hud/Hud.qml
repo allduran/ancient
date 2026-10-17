@@ -24,8 +24,12 @@ PanelWindow {
     color: "transparent"
 
     property bool shown: false
-    onShownChanged: if (shown)
-        Hyprland.refreshToplevels()    // minimapa al día
+    onShownChanged: {
+        if (shown) {
+            Hyprland.refreshToplevels();       // minimapa al día
+            Qt.callLater(() => keys.forceActiveFocus());
+        }
+    }
 
     // Zona que recibe el ratón: oculto → 3 px del borde; visible → las piezas del HUD
     mask: shown ? fullRegion : triggerRegion
@@ -49,6 +53,26 @@ PanelWindow {
     Item {
         id: hoverZone
         anchors.fill: parent
+    }
+
+    // Teclas de las habilidades
+    Item {
+        id: keys
+        anchors.fill: parent
+        focus: true
+        Keys.onPressed: event => {
+            if (event.key === Qt.Key_Escape) {
+                hud.shown = false;
+                event.accepted = true;
+                return;
+            }
+            const k = event.text.toUpperCase();
+            if (hero.press(k)) {
+                event.accepted = true;
+                if (k === "F")
+                    hud.shown = false;      // que el selector de captura reciba el teclado
+            }
+        }
     }
 
     HoverHandler {
