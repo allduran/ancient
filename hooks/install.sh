@@ -12,6 +12,9 @@ chmod +x "$root"/scripts/*.sh
 step "carpetas"
 mkdir -p "$HOME/Pictures/Screenshots" "$HOME/Videos/Recordings" "$HOME/.local/state/ancient"
 
+step "Hyprland"
+duran hypr init || warn "actualiza duran: falta 'duran hypr init'"
+
 step "bluetooth"
 sudo systemctl enable --now bluetooth.service 2>/dev/null || warn "no se pudo activar bluetooth.service"
 
