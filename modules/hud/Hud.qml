@@ -12,6 +12,8 @@ PanelWindow {
 
     WlrLayershell.namespace: "ancient-hud"
     WlrLayershell.layer: WlrLayer.Top
+    // Abierto → recibe el teclado; cerrado → el teclado sigue en tus ventanas
+    WlrLayershell.keyboardFocus: shown ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     exclusionMode: ExclusionMode.Ignore
     anchors {
         bottom: true
@@ -26,20 +28,12 @@ PanelWindow {
         Hyprland.refreshToplevels()    // minimapa al día
 
     // Zona que recibe el ratón: oculto → 3 px del borde; visible → las piezas del HUD
-    mask: shown ? hudRegion : triggerRegion
+    mask: shown ? fullRegion : triggerRegion
     property Region triggerRegion: Region {
         item: trigger
     }
-    property Region hudRegion: Region {
-        item: minimap
-        Region {
-            item: hero
-            intersection: Intersection.Combine
-        }
-        Region {
-            item: shop
-            intersection: Intersection.Combine
-        }
+    property Region fullRegion: Region {
+        item: hoverZone
     }
 
     Item {
@@ -50,6 +44,11 @@ PanelWindow {
             bottom: parent.bottom
         }
         height: 3
+    }
+
+    Item {
+        id: hoverZone
+        anchors.fill: parent
     }
 
     HoverHandler {
@@ -63,7 +62,7 @@ PanelWindow {
     }
     Timer {
         id: hideTimer
-        interval: 500
+        interval: 800
         onTriggered: hud.shown = false
     }
 

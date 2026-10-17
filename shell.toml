@@ -1,11 +1,21 @@
 [shell]
 name = "ancient"
-description = "Dota 2–inspired Quickshell shell for Hyprland. Floating windows."
+description = "Shell para Hyprland inspirado en la interfaz de Dota 2"
 version = "0.1.0"
+license = "GPL-3.0-or-later"
 engine = "quickshell"
+start = "qs -c ancient -d"
+stop = "qs -c ancient kill"
 
 [packages]
-repo = ["quickshell", "networkmanager", "upower", "pipewire", "grim", "slurp", "wl-clipboard", "wf-recorder", "jq", "libnotify", "brightnessctl", "pacman-contrib"]
+repo = [
+  "quickshell",
+  "networkmanager", "upower", "pipewire", "bluez", "bluez-utils",   # red, batería, audio, bluetooth
+  "grim", "slurp", "wl-clipboard", "wf-recorder", "jq",             # capturas y grabación
+  "brightnessctl", "hyprsunset",                                    # brillo y luz nocturna
+  "libnotify", "pacman-contrib", "procps-ng",                       # notificaciones, actualizaciones, pgrep
+  "foot",                                                           # terminal de "Quick buy"
+]
 aur = []
 
 [ipc]
@@ -38,6 +48,7 @@ shells = []
 [hooks]
 install = "hooks/install.sh"
 uninstall = "hooks/uninstall.sh"
+update = "hooks/update.sh"
 
 [hyprland]
 config = "hypr/shell.lua"     # duran la enlaza en ~/.config/hypr/shell.lua

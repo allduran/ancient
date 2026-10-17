@@ -42,6 +42,21 @@ Item {
         const m = Math.floor(s / 60);
         return (m < 10 ? "0" : "") + m + ":" + (s % 60 < 10 ? "0" : "") + (s % 60);
     }
+    // Tecla → habilidad. Devuelve true si la tecla era de una habilidad.
+    function press(k) {
+        const map = {
+            Q: abQ,
+            W: abW,
+            E: abE,
+            D: abD,
+            F: abF,
+            R: abR
+        };
+        if (!map[k])
+            return false;
+        map[k].trigger();
+        return true;
+    }
 
     // Buffs activos (estados del sistema)
     readonly property var buffs: {
@@ -55,6 +70,16 @@ Item {
             list.push({
                 text: "⛨ VPN",
                 tint: "#2c4a6e"
+            });
+        if (Toggles.dnd)
+            list.push({
+                text: "⊘ NO MOLESTAR",
+                tint: "#3a2c5e"
+            });
+        if (Toggles.night)
+            list.push({
+                text: "☾ NOCTURNA",
+                tint: "#5a4a1e"
             });
         if (charging)
             list.push({
@@ -413,29 +438,79 @@ Item {
                         botColor: Theme.manaBot
                     }
 
-                    // Habilidades: fase 2
+                    // Habilidades
                     Row {
                         topPadding: 6
                         spacing: 6
-                        EmptySlot {
+
+                        // Ajustes (panel futuro)
+                        Ability {
                             width: 34
                             height: 56
+                            icon: "settings.svg"
+                            on: false
                         }
-                        Repeater {
-                            model: ["Q", "W", "E", "D", "F"]
-                            EmptySlot {
-                                required property string modelData
-                                key: modelData
-                                width: 56
-                                height: 56
-                            }
+
+                        Ability {
+                            id: abQ
+                            key: "Q"
+                            name: "WI-FI"
+                            icon: "wifi.svg"
+                            on: Toggles.wifi
+                            topColor: "#245060"
+                            bottomColor: "#0e2128"
+                            onActivated: Toggles.toggleWifi()
                         }
-                        EmptySlot {
+                        Ability {
+                            id: abW
+                            key: "W"
+                            name: "BLUETOOTH"
+                            icon: "bluetooth.svg"
+                            on: Toggles.bluetooth
+                            topColor: "#2c3a6e"
+                            bottomColor: "#10142b"
+                            onActivated: Toggles.toggleBluetooth()
+                        }
+                        Ability {
+                            id: abE
+                            key: "E"
+                            name: "SILENCIO"
+                            icon: "dnd.svg"
+                            on: Toggles.dnd
+                            topColor: "#3a2c5e"
+                            bottomColor: "#141026"
+                            onActivated: Toggles.toggleDnd()
+                        }
+                        Ability {
+                            id: abD
+                            key: "D"
+                            name: "NOCTURNA"
+                            icon: "night.svg"
+                            on: Toggles.night
+                            topColor: "#5a4a1e"
+                            bottomColor: "#241d0b"
+                            onActivated: Toggles.toggleNight()
+                        }
+                        Ability {
+                            id: abF
+                            key: "F"
+                            name: "CAPTURA"
+                            icon: "capture.svg"
+                            cooldown: 3000
+                            onActivated: Capture.startSelect("area")
+                        }
+
+                        // Definitiva: cambiar de modo
+                        Ability {
+                            id: abR
                             key: "R"
-                            width: 64
-                            height: 64
-                            y: -4
-                            border.color: Theme.accentLight
+                            icon: "dire.svg"
+                            big: true
+                            name: ShellState.mode === "dire" ? "RADIANT" : "DIRE"
+                            topColor: ShellState.mode === "dire" ? "#2e5226" : "#6e2a20"
+                            bottomColor: ShellState.mode === "dire" ? "#14240f" : "#2a0e0a"
+                            cooldown: 2000
+                            onActivated: ShellState.mode = ShellState.mode === "dire" ? "radiant" : "dire"
                         }
                     }
                 }
