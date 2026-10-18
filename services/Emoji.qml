@@ -25,7 +25,12 @@ Singleton {
     }
 
     function find(e) {
-        return all.find(x => x.e === e) ?? { e: e, n: "", g: 0, k: "" };
+        return all.find(x => x.e === e) ?? {
+            e: e,
+            n: "",
+            g: 0,
+            k: ""
+        };
     }
 
     function inGroup(g) {
@@ -54,8 +59,9 @@ Singleton {
         property string emoji: ""
         property bool andType: true
         interval: 150
-        onTriggered: Quickshell.execDetached(["sh", "-c",
-            "printf '%s' \"$1\" | wl-copy" + (andType ? " && wtype -- \"$1\"" : ""), "sh", emoji])
+        // Se pega desde el portapapeles (escribirlo con wtype rompe los emojis en apps XWayland).
+        // En terminales el atajo de pegar es Ctrl+Shift+V.
+        onTriggered: Quickshell.execDetached(["sh", "-c", "printf '%s' \"$1\" | wl-copy || exit; [ \"$2\" = 1 ] || exit 0; sleep 0.1; " + "case \"$(hyprctl activewindow -j | jq -r .class)\" in " + "foot|kitty|Alacritty|org.wezfurlong.wezterm|com.mitchellh.ghostty|org.kde.konsole) wtype -M ctrl -M shift v -m shift -m ctrl ;; " + "*) wtype -M ctrl v -m ctrl ;; esac", "sh", emoji, andType ? "1" : "0"])
     }
 
     FileView {

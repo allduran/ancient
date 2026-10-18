@@ -51,7 +51,7 @@ Singleton {
     // Deja la entrada en el portapapeles y, si se pide, la pega con Ctrl+V
     function use(e, andPaste) {
         const src = e.pinned ? "printf '%s' \"$1\"" : "cliphist decode \"$1\"";
-        const tail = andPaste ? " && sleep 0.2 && wtype -M ctrl v -m ctrl" : "";
+        const tail = andPaste ? " && sleep 0.2 && case \"$(hyprctl activewindow -j | jq -r .class)\" in " + "foot|kitty|Alacritty|org.wezfurlong.wezterm|com.mitchellh.ghostty|org.kde.konsole) wtype -M ctrl -M shift v -m shift -m ctrl ;; " + "*) wtype -M ctrl v -m ctrl ;; esac" : "";
         Quickshell.execDetached(["sh", "-c", src + " | wl-copy" + tail, "sh", e.pinned ? e.full : e.id]);
     }
 
