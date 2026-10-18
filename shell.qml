@@ -13,6 +13,7 @@ import "modules/media"
 import "modules/hud"
 import "modules/clipboard"
 import "modules/emoji"
+import "modules/wallpaper"
 import "services"
 import "config"
 
@@ -40,6 +41,9 @@ ShellRoot {
             Hud {
                 modelData: perScreen.modelData
             }
+            Background {
+                modelData: perScreen.modelData
+            }
         }
     }
 
@@ -53,6 +57,7 @@ ShellRoot {
     ClipboardPanel {}
     EmojiWheel {}
     EmojiPicker {}
+    WallPicker {}
 
     // duran ipc bar
     IpcHandler {
@@ -187,6 +192,14 @@ ShellRoot {
         }
         function all(): void {
             ShellState.emojiPickerOpen = !ShellState.emojiPickerOpen;
+        }
+    }
+
+    // duran ipc wallpaper
+    IpcHandler {
+        target: "wallpaper"
+        function toggle(): void {
+            ShellState.wallpaperOpen = !ShellState.wallpaperOpen;
         }
     }
 }

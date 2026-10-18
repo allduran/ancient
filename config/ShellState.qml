@@ -16,4 +16,5 @@ Singleton {
     property bool clipboardOpen: false
     property bool emojiWheelOpen: false
     property bool emojiPickerOpen: false
+    property bool wallpaperOpen: false
 }
