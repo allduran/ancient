@@ -11,6 +11,8 @@ import "modules/lock"
 import "modules/session"
 import "modules/media"
 import "modules/hud"
+import "modules/clipboard"
+import "modules/emoji"
 import "services"
 import "config"
 
@@ -48,6 +50,9 @@ ShellRoot {
     LockScreen {}
     SessionMenu {}
     MediaPanel {}
+    ClipboardPanel {}
+    EmojiWheel {}
+    EmojiPicker {}
 
     // duran ipc bar
     IpcHandler {
@@ -163,6 +168,25 @@ ShellRoot {
         }
         function stop(): void {
             Media.stop();
+        }
+    }
+
+    // duran ipc clipboard
+    IpcHandler {
+        target: "clipboard"
+        function toggle(): void {
+            ShellState.clipboardOpen = !ShellState.clipboardOpen;
+        }
+    }
+
+    // duran ipc emoji
+    IpcHandler {
+        target: "emoji"
+        function toggle(): void {
+            ShellState.emojiWheelOpen = !ShellState.emojiWheelOpen;
+        }
+        function all(): void {
+            ShellState.emojiPickerOpen = !ShellState.emojiPickerOpen;
         }
     }
 }

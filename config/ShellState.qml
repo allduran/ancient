@@ -13,4 +13,7 @@ Singleton {
     property var recentApps: []          // ids de las últimas apps lanzadas (máx. 8)
     property bool mediaOpen: false
     property string terminal: "foot"     // terminal para "Quick buy" (actualizar)
+    property bool clipboardOpen: false
+    property bool emojiWheelOpen: false
+    property bool emojiPickerOpen: false
 }

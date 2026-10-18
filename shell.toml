@@ -15,6 +15,8 @@ repo = [
   "brightnessctl", "hyprsunset",                                    # brillo y luz nocturna
   "libnotify", "pacman-contrib", "procps-ng",                       # notificaciones, actualizaciones, pgrep
   "foot",                                                           # terminal de "Quick buy"
+  "cliphist", 
+  "wtype"
 ]
 aur = []
 
@@ -41,6 +43,9 @@ media_toggle = "qs -c ancient ipc call media toggle"
 media_next   = "qs -c ancient ipc call media next"
 media_prev   = "qs -c ancient ipc call media previous"
 media_stop   = "qs -c ancient ipc call media stop"
+clipboard    = "qs -c ancient ipc call clipboard toggle"
+emoji        = "qs -c ancient ipc call emoji toggle"
+emoji_all    = "qs -c ancient ipc call emoji all"
 
 [conflicts]
 shells = []
