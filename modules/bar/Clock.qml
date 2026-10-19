@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Shapes
 import "../../config"
+import "../../services"
 
 Item {
     id: dial
@@ -165,7 +166,7 @@ Item {
         }
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: Qt.formatDateTime(clock.date, "HH:mm")
+            text: Qt.formatDateTime(clock.date, Settings.data.clock24 ? "HH:mm" : "h:mm AP")
             color: Theme.text
             font.pixelSize: 17
             font.bold: true

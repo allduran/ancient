@@ -17,4 +17,6 @@ Singleton {
     property bool emojiWheelOpen: false
     property bool emojiPickerOpen: false
     property bool wallpaperOpen: false
+    property bool settingsOpen: false
+    property bool hudOpen: false         // HUD con atajo (talento HUD)
 }

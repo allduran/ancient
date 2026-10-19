@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Hyprland
 import QtQuick
 import "../../config"
+import "../../services"
 
 // Minimapa: escritorios del grupo actual con sus ventanas dibujadas a escala
 Rectangle {
@@ -94,7 +95,7 @@ Rectangle {
                         anchors.fill: parent
                         enabled: tile.wsId > 0
                         cursorShape: Qt.PointingHandCursor
-                        onClicked: Hyprland.dispatch('hl.dsp.focus({ workspace = "' + tile.wsId + '" })')
+                        onClicked: Settings.focusWorkspace(tile.wsId)
                     }
                 }
             }

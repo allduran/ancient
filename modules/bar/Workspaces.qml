@@ -2,6 +2,7 @@ import Quickshell
 import Quickshell.Hyprland
 import QtQuick
 import "../../config"
+import "../../services"
 
 Row {
     id: root
@@ -44,7 +45,7 @@ Row {
             active: root.activeId === wsId
             tint: Theme.playerColors[index]
             barColor: empty ? "transparent" : Theme.playerColors[index]
-            onClicked: Hyprland.dispatch('hl.dsp.focus({ workspace = "' + wsId + '" })')
+            onClicked: Settings.focusWorkspace(wsId)
         }
     }
 }

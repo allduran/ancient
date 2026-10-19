@@ -47,6 +47,8 @@ clipboard    = "qs -c ancient ipc call clipboard toggle"
 emoji        = "qs -c ancient ipc call emoji toggle"
 emoji_all    = "qs -c ancient ipc call emoji all"
 wallpaper    = "qs -c ancient ipc call wallpaper toggle"
+settings     = "qs -c ancient ipc call settings toggle"
+hud          = "qs -c ancient ipc call hud toggle"
 
 [conflicts]
 shells = []

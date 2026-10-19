@@ -14,6 +14,7 @@ import "modules/hud"
 import "modules/clipboard"
 import "modules/emoji"
 import "modules/wallpaper"
+import "modules/settings"
 import "services"
 import "config"
 
@@ -58,6 +59,7 @@ ShellRoot {
     EmojiWheel {}
     EmojiPicker {}
     WallPicker {}
+    SettingsPanel {}
 
     // duran ipc bar
     IpcHandler {
@@ -200,6 +202,22 @@ ShellRoot {
         target: "wallpaper"
         function toggle(): void {
             ShellState.wallpaperOpen = !ShellState.wallpaperOpen;
+        }
+    }
+
+    // duran ipc settings
+    IpcHandler {
+        target: "settings"
+        function toggle(): void {
+            ShellState.settingsOpen = !ShellState.settingsOpen;
+        }
+    }
+
+    // duran ipc hud (talento "HUD con un atajo")
+    IpcHandler {
+        target: "hud"
+        function toggle(): void {
+            ShellState.hudOpen = !ShellState.hudOpen;
         }
     }
 }

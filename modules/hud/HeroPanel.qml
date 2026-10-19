@@ -322,7 +322,8 @@ Item {
                             Image {
                                 id: face
                                 anchors.fill: parent
-                                source: "file://" + hero.home + "/.face"
+                                source: "file://" + hero.home + "/.face?" + Settings.faceStamp
+                                cache: false
                                 fillMode: Image.PreserveAspectCrop
                                 sourceSize: Qt.size(320, 240)
                             }
@@ -448,7 +449,7 @@ Item {
                             width: 34
                             height: 56
                             icon: "settings.svg"
-                            on: false
+                            onActivated: ShellState.settingsOpen = true
                         }
 
                         Ability {
