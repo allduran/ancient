@@ -27,12 +27,12 @@ Singleton {
 
     // Lo que lee hypr/shell.lua: modo (colores de los bordes) y ventanas flotantes
     function writeHypr(reload) {
-        hyprWrite.command = ["sh", "-c",
-            "mkdir -p \"$1\" && printf 'mode=%s\\nfloat=%s\\n' \"$2\" \"$3\" > \"$1/hypr\"" + (reload ? " && hyprctl reload >/dev/null" : ""),
-            "sh", root.stateDir, adapter.mode, adapter.floating ? "1" : "0"];
+        hyprWrite.command = ["sh", "-c", "mkdir -p \"$1\" && printf 'mode=%s\\nfloat=%s\\n' \"$2\" \"$3\" > \"$1/hypr\"" + (reload ? " && hyprctl reload >/dev/null" : ""), "sh", root.stateDir, adapter.mode, adapter.floating ? "1" : "0"];
         hyprWrite.running = true;
     }
-    Process { id: hyprWrite }
+    Process {
+        id: hyprWrite
+    }
 
     // Talento HYPRLAND: sintaxis de dispatch
     function focusWorkspace(id) {
@@ -75,6 +75,7 @@ Singleton {
             // Talentos
             property bool clock24: true
             property bool hudHover: true        // false: el HUD sale con un atajo
+            property int hudDelay: 1200          // ms con el ratón en el borde antes de mostrar el HUD
             property bool quietDire: false      // silenciar avisos en modo Dire
             property bool autoDire: false       // Dire al abrir un juego
             property bool luaDispatch: true     // false: sintaxis clásica de Hyprland

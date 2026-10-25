@@ -5,7 +5,7 @@ import QtQuick
 
 // Estado de la interfaz que comparten varios componentes
 Singleton {
-    property bool windowListOpen: true
+    property bool windowListOpen: false
     property bool windowListCollapsed: false
     property string mode: "radiant"      // "radiant" (general) | "dire" (juego)
     property bool armoryOpen: false

@@ -91,10 +91,18 @@ PanelWindow {
         onHoveredChanged: {
             if (hovered) {
                 hideTimer.stop();
-                hud.shown = true;
-            } else
+                if (!hud.shown)
+                    showTimer.restart();        // espera antes de salir
+            } else {
+                showTimer.stop();               // si te vas antes de tiempo, no sale
                 hideTimer.restart();
+            }
         }
+    }
+    Timer {
+        id: showTimer
+        interval: Settings.data.hudDelay
+        onTriggered: hud.shown = true
     }
     Timer {
         id: hideTimer
