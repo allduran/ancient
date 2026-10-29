@@ -10,11 +10,13 @@ PanelWindow {
     WlrLayershell.layer: WlrLayer.Overlay       // por encima de todo
     exclusionMode: ExclusionMode.Ignore
     anchors {
-        top: true
+        top: !Settings.data.notifBottom
+        bottom: Settings.data.notifBottom
         right: true
     }
     margins {
         top: Theme.stripHeight + 8
+        bottom: 8
         right: 8
     }
     implicitWidth: Theme.notifWidth

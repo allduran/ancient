@@ -220,4 +220,12 @@ ShellRoot {
             ShellState.hudOpen = !ShellState.hudOpen;
         }
     }
+
+    // duran ipc minimize
+    IpcHandler {
+        target: "window"
+        function minimize(): void {
+            Settings.minimize();
+        }
+    }
 }

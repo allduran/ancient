@@ -526,9 +526,31 @@ Item {
                         spacing: 3
                         Repeater {
                             model: 6
-                            EmptySlot {
+                            Rectangle {
+                                id: inv
+                                required property int index
+                                readonly property var win: Settings.minimized[index] ?? null
                                 width: 50
                                 height: 36
+                                color: Theme.slot
+                                border.width: 1
+                                border.color: invArea.containsMouse && win ? Theme.accentLight : Theme.edgeDark
+                                Image {
+                                    anchors.centerIn: parent
+                                    visible: inv.win !== null
+                                    width: 22
+                                    height: 22
+                                    source: inv.win ? Apps.icon(Apps.byId(inv.win.lastIpcObject["class"] || "")) : ""
+                                    sourceSize: Qt.size(22, 22)
+                                }
+                                MouseArea {
+                                    id: invArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    enabled: inv.win !== null
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: Settings.restore(inv.win)   // vuelve a tu escritorio
+                                }
                             }
                         }
                     }

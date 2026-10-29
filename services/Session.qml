@@ -11,7 +11,8 @@ Singleton {
         Lock.lock();
     }
     function suspend() {
-        Lock.lock();
+        if (Settings.data.lockOnSuspend)
+            Lock.lock();
         Quickshell.execDetached(["systemctl", "suspend"]);
     }   // bloquea antes de dormir
     function logout() {

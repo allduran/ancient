@@ -42,6 +42,30 @@ Singleton {
             Hyprland.dispatch("workspace " + id);
     }
 
+    // ── Minimizar (talento MINIMIZAR) ──
+    // Mochila: a special:minimized, se ve en el inventario del HUD y se recupera desde ahí.
+    // Escritorio especial: a special:special, el de Super+S de Hyprland.
+    readonly property string minimizedWs: adapter.minimizeBackpack ? "minimized" : "special"
+    readonly property var minimized: Hyprland.toplevels.values.filter(t => t.workspace && t.workspace.name === "special:minimized")
+
+    function minimize() {
+        const ws = "special:" + minimizedWs;
+        if (adapter.luaDispatch)
+            Hyprland.dispatch('hl.dsp.window.move({ workspace = "' + ws + '", follow = false })');
+        else
+            Hyprland.dispatch("movetoworkspacesilent " + ws);
+    }
+
+    // Devuelve una ventana minimizada al escritorio actual y la enfoca
+    function restore(t) {
+        const ws = Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : 1;
+        const addr = "address:" + t.lastIpcObject.address;
+        if (adapter.luaDispatch)
+            Hyprland.dispatch('hl.dsp.window.move({ window = "' + addr + '", workspace = "' + ws + '" })');
+        else
+            Hyprland.dispatch("movetoworkspace " + ws + "," + addr);
+    }
+
     // Avatar: copia la imagen a ~/.face
     function setFace(path) {
         face.command = ["cp", path, Quickshell.env("HOME") + "/.face"];
@@ -80,6 +104,11 @@ Singleton {
             property bool autoDire: false       // Dire al abrir un juego
             property bool luaDispatch: true     // false: sintaxis clásica de Hyprland
             property bool floating: false       // ventanas flotantes
+            property bool windowListStart: false // lista de ventanas abierta al iniciar
+            property bool minimizeBackpack: true // minimizar a la mochila del HUD
+            property bool lockOnSuspend: true   // bloquear antes de suspender
+            property bool notifBottom: false    // avisos abajo a la derecha
+            property bool autoUpdates: true     // contar actualizaciones cada 30 min
             // Loadout
             property string mode: "radiant"
             property string terminal: "foot"
@@ -94,6 +123,7 @@ Singleton {
         ShellState.mode = adapter.mode;
         ShellState.terminal = adapter.terminal;
         ShellState.pinnedApps = adapter.pinnedApps;
+        ShellState.windowListOpen = adapter.windowListStart;
         root.loaded = true;
         writeHypr(false);
     }
