@@ -21,6 +21,7 @@ Singleton {
         failed = false;
         busy = false;
         locked = true;
+        Sounds.play("lock");
         if (testMode)
             safety.restart();
     }

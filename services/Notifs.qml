@@ -35,8 +35,10 @@ Singleton {
             n.tracked = true;                                    // guardarla
             // Con No molestar solo se muestran las críticas (igual se guardan en el escudo)
             const quiet = Toggles.dnd || (Settings.data.quietDire && ShellState.mode === "dire");
-            if (!quiet || n.urgency === NotificationUrgency.Critical)
+            if (!quiet || n.urgency === NotificationUrgency.Critical) {
                 root.popups = [n].concat(root.popups).slice(0, 4);
+                Sounds.play("notify");
+            }
             n.closed.connect(() => root.hidePopup(n));           // si la cierra la app, quitar el popup
         }
     }

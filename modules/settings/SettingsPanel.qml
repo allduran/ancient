@@ -25,10 +25,11 @@ PanelWindow {
     color: "transparent"
 
     readonly property string home: Quickshell.env("HOME")
-    property string page: "talents"     // talents | wallpaper | theme | avatar | terminal | apps
+    property string page: "talents"     // talents | wallpaper | theme | avatar | terminal | cursor | apps
     property string appQuery: ""
     property var avatars: []
     property var terminals: []
+    property var cursorThemes: []
 
     onVisibleChanged: {
         if (!visible)
@@ -46,12 +47,15 @@ PanelWindow {
     // Avatares (~/Pictures y ~/Pictures/Avatars) y terminales instaladas
     Process {
         id: scan
-        command: ["sh", "-c", "find \"$HOME/Pictures\" \"$HOME/Pictures/Avatars\" -maxdepth 1 -type f \\( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \\) ! -name 'wallpaper-dota-*' 2>/dev/null | sort -u | head -n 60; " + "echo '--'; for t in foot kitty alacritty wezterm ghostty konsole; do command -v $t >/dev/null && echo $t; done"]
+        command: ["sh", "-c", "find \"$HOME/Pictures\" \"$HOME/Pictures/Avatars\" -maxdepth 1 -type f \\( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \\) ! -name 'wallpaper-dota-*' 2>/dev/null | sort -u | head -n 60; " + "echo '--'; for t in foot kitty alacritty wezterm ghostty konsole; do command -v $t >/dev/null && echo $t; done; " +
+            // Temas de cursor: los que tienen carpeta cursors/
+            "echo '--'; for d in /usr/share/icons \"$HOME/.local/share/icons\" \"$HOME/.icons\"; do for t in \"$d\"/*/; do " + "[ -d \"$t/cursors\" ] && basename \"$t\"; done; done 2>/dev/null | sort -u"]
         stdout: StdioCollector {
             onStreamFinished: {
                 const parts = this.text.split("--\n");
                 win.avatars = (parts[0] || "").split("\n").filter(l => l !== "");
                 win.terminals = (parts[1] || "").split("\n").filter(l => l !== "");
+                win.cursorThemes = (parts[2] || "").split("\n").filter(l => l !== "" && l !== "default");
             }
         }
     }
@@ -93,7 +97,7 @@ PanelWindow {
         property string target
         default property alias art: artArea.data
         readonly property bool active: win.page === target
-        height: 96
+        height: 74
         color: "#050607"
         clip: true
         border.width: active ? 2 : 1
@@ -484,11 +488,11 @@ PanelWindow {
                     }
                     Grid {
                         width: parent.width
-                        columns: 2
+                        columns: 3
                         spacing: 8
 
                         Slot {
-                            width: (parent.width - 8) / 2
+                            width: (parent.width - 16) / 3
                             key: "FONDO"
                             target: "wallpaper"
                             value: Wallpapers.current !== "" ? Wallpapers.current.split("/").pop().replace(/\.\w+$/, "") : "—"
@@ -501,7 +505,7 @@ PanelWindow {
                             }
                         }
                         Slot {
-                            width: (parent.width - 8) / 2
+                            width: (parent.width - 16) / 3
                             key: "TEMA"
                             target: "theme"
                             value: ShellState.mode === "dire" ? "Dire" : "Radiant"
@@ -524,7 +528,7 @@ PanelWindow {
                             }
                         }
                         Slot {
-                            width: (parent.width - 8) / 2
+                            width: (parent.width - 16) / 3
                             key: "AVATAR"
                             target: "avatar"
                             value: "~/.face"
@@ -537,7 +541,7 @@ PanelWindow {
                             }
                         }
                         Slot {
-                            width: (parent.width - 8) / 2
+                            width: (parent.width - 16) / 3
                             key: "TERMINAL"
                             target: "terminal"
                             value: ShellState.terminal
@@ -553,6 +557,19 @@ PanelWindow {
                                     font.pixelSize: 16
                                     font.bold: true
                                 }
+                            }
+                        }
+                        Slot {
+                            width: (parent.width - 16) / 3
+                            key: "CURSOR"
+                            target: "cursor"
+                            value: Settings.data.cursorTheme || "—"
+                            Text {
+                                anchors.centerIn: parent
+                                anchors.verticalCenterOffset: -12
+                                text: "➚"
+                                color: Theme.accentLight
+                                font.pixelSize: 24
                             }
                         }
                     }
@@ -664,6 +681,7 @@ PanelWindow {
                                     theme: "TEMA",
                                     avatar: "AVATAR",
                                     terminal: "TERMINAL",
+                                    cursor: "CURSOR",
                                     apps: "APPS FIJADAS"
                                 })[win.page]
                             color: Theme.accentLight
@@ -683,6 +701,7 @@ PanelWindow {
                                     theme: "también con la R del HUD",
                                     avatar: "imágenes de ~/Pictures y ~/Pictures/Avatars",
                                     terminal: "la que abre Quick buy",
+                                    cursor: "temas instalados · se aplica al momento",
                                     apps: "clic para fijar o quitar"
                                 })[win.page]
                             color: Theme.textMute
@@ -736,6 +755,14 @@ PanelWindow {
                                     spacing: 12
                                     Repeater {
                                         model: [
+                                            {
+                                                lvl: "65",
+                                                cat: "SONIDOS",
+                                                key: "sounds",
+                                                l: ["Sonidos de ancient", "Bloqueo, avisos y modo"],
+                                                r: ["Ninguno", "Silencio total"],
+                                                rightIsTrue: false
+                                            },
                                             {
                                                 lvl: "60",
                                                 cat: "UPDATES",
@@ -1092,6 +1119,104 @@ PanelWindow {
                                         cursorShape: Qt.PointingHandCursor
                                         onClicked: ShellState.terminal = modelData
                                     }
+                                }
+                            }
+                        }
+
+                        // CURSOR
+                        Item {
+                            anchors.fill: parent
+                            visible: win.page === "cursor"
+
+                            Row {
+                                id: sizes
+                                spacing: 6
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: "TAMAÑO"
+                                    color: Theme.textMute
+                                    font.pixelSize: 11
+                                    font.bold: true
+                                    font.letterSpacing: 1.6
+                                    rightPadding: 6
+                                }
+                                Repeater {
+                                    model: [24, 32, 48]
+                                    Rectangle {
+                                        required property int modelData
+                                        readonly property bool on: Settings.data.cursorSize === modelData
+                                        width: 56
+                                        height: 30
+                                        color: on ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.25) : Qt.rgba(0, 0, 0, 0.4)
+                                        border.width: 1
+                                        border.color: on ? Theme.accentLight : Theme.edge
+                                        Text {
+                                            anchors.centerIn: parent
+                                            text: modelData
+                                            color: Theme.text
+                                            font.family: "monospace"
+                                            font.pixelSize: 13
+                                            font.bold: true
+                                        }
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            cursorShape: Qt.PointingHandCursor
+                                            onClicked: Settings.setCursor(Settings.data.cursorTheme, modelData)
+                                        }
+                                    }
+                                }
+                            }
+
+                            ListView {
+                                anchors {
+                                    top: sizes.bottom
+                                    topMargin: 10
+                                    left: parent.left
+                                    right: parent.right
+                                    bottom: parent.bottom
+                                }
+                                clip: true
+                                spacing: 4
+                                model: win.cursorThemes
+                                delegate: Rectangle {
+                                    required property string modelData
+                                    readonly property bool on: Settings.data.cursorTheme === modelData
+                                    width: ListView.view.width
+                                    height: 42
+                                    color: on ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2) : Qt.rgba(0, 0, 0, 0.35)
+                                    border.width: 1
+                                    border.color: on ? Theme.accentLight : Theme.edgeDark
+                                    Text {
+                                        x: 14
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        text: modelData
+                                        color: Theme.text
+                                        font.pixelSize: 14
+                                        font.bold: true
+                                    }
+                                    Text {
+                                        anchors.right: parent.right
+                                        anchors.rightMargin: 14
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        visible: parent.on
+                                        text: "EQUIPADO"
+                                        color: Theme.accentLight
+                                        font.pixelSize: 11
+                                        font.bold: true
+                                        font.letterSpacing: 1.6
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        cursorShape: Qt.PointingHandCursor
+                                        onClicked: Settings.setCursor(modelData, Settings.data.cursorSize)
+                                    }
+                                }
+                                Text {
+                                    anchors.centerIn: parent
+                                    visible: win.cursorThemes.length === 0
+                                    text: "No hay temas de cursor instalados"
+                                    color: Theme.textMute
+                                    font.pixelSize: 14
                                 }
                             }
                         }

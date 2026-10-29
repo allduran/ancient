@@ -66,6 +66,21 @@ Singleton {
             Hyprland.dispatch("movetoworkspace " + ws + "," + addr);
     }
 
+    // ── Cursor ──
+    function setCursor(name, size) {
+        adapter.cursorTheme = name;
+        adapter.cursorSize = size;
+        applyCursor();
+    }
+    function applyCursor() {
+        if (adapter.cursorTheme === "")
+            return;
+        const size = String(adapter.cursorSize);
+        Quickshell.execDetached(["hyprctl", "setcursor", adapter.cursorTheme, size]);
+        Quickshell.execDetached(["gsettings", "set", "org.gnome.desktop.interface", "cursor-theme", adapter.cursorTheme]);
+        Quickshell.execDetached(["gsettings", "set", "org.gnome.desktop.interface", "cursor-size", size]);
+    }
+
     // Avatar: copia la imagen a ~/.face
     function setFace(path) {
         face.command = ["cp", path, Quickshell.env("HOME") + "/.face"];
@@ -109,6 +124,9 @@ Singleton {
             property bool lockOnSuspend: true   // bloquear antes de suspender
             property bool notifBottom: false    // avisos abajo a la derecha
             property bool autoUpdates: true     // contar actualizaciones cada 30 min
+            property bool sounds: true          // false: sin sonidos
+            property string cursorTheme: ""     // "" = el de variables.lua
+            property int cursorSize: 24
             // Loadout
             property string mode: "radiant"
             property string terminal: "foot"
@@ -125,6 +143,7 @@ Singleton {
         ShellState.pinnedApps = adapter.pinnedApps;
         ShellState.windowListOpen = adapter.windowListStart;
         root.loaded = true;
+        applyCursor();                      // el cursor elegido gana al de variables.lua
         writeHypr(false);
     }
 
