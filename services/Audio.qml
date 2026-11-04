@@ -3,6 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Services.Pipewire
 import QtQuick
+import "../config"
 
 // Volumen de la salida de audio por defecto
 Singleton {
@@ -19,15 +20,15 @@ Singleton {
 
     function setVolume(v) {
         if (ready)
-            sink.audio.volume = Math.max(0, Math.min(1, v));
+            sink.audio.volume = Math.max(0, Math.min(Settings.data.volMax / 100, v));   // tope de Ajustes → Sistema
     }
     function up() {
         if (muted)
             sink.audio.muted = false;     // subir quita el silencio
-        setVolume(volume + 0.05);
+        setVolume(volume + Settings.data.volStep / 100);
     }
     function down() {
-        setVolume(volume - 0.05);
+        setVolume(volume - Settings.data.volStep / 100);
     }
     function toggleMute() {
         if (ready)

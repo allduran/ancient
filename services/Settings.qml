@@ -134,6 +134,13 @@ Singleton {
             property int idleSuspend: 0
             property string powerProfile: "balanced"   // power-saver | balanced | performance
             property bool direPerformance: true         // modo Dire → rendimiento
+            // Sistema → Luz nocturna y volumen
+            property int nightTemp: 4500        // K (más bajo = más cálido)
+            property bool nightAuto: false      // encender sola en el horario
+            property int nightFrom: 21          // hora de encendido
+            property int nightTo: 7             // hora de apagado
+            property int volMax: 100            // % (más de 100 amplifica)
+            property int volStep: 5             // % por pulsación
             // Loadout
             property string mode: "radiant"
             property string terminal: "foot"

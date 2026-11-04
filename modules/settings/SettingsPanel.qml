@@ -516,7 +516,7 @@ PanelWindow {
                         PageTab {
                             width: parent.width
                             label: "SISTEMA"
-                            sub: "energía"
+                            sub: "energía · luz · sonido"
                             active: win.page === "sys"
                             onClicked: win.page = "sys"
                         }
@@ -1437,6 +1437,152 @@ PanelWindow {
                                         }
                                     ]
                                     onPicked: v => Settings.set("direPerformance", v)
+                                }
+
+                                Section {
+                                    text: "LUZ NOCTURNA"
+                                    topPadding: 14
+                                    bottomPadding: 4
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Temperatura"
+                                    hint: "más baja, más cálida"
+                                    value: Settings.data.nightTemp
+                                    options: [
+                                        {
+                                            value: 5500,
+                                            text: "5500 K"
+                                        },
+                                        {
+                                            value: 4500,
+                                            text: "4500 K"
+                                        },
+                                        {
+                                            value: 3500,
+                                            text: "3500 K"
+                                        },
+                                        {
+                                            value: 2700,
+                                            text: "2700 K"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("nightTemp", v)
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Encender sola"
+                                    hint: "y apagarse al acabar el horario"
+                                    value: Settings.data.nightAuto
+                                    options: [
+                                        {
+                                            value: true,
+                                            text: "SÍ"
+                                        },
+                                        {
+                                            value: false,
+                                            text: "NO"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("nightAuto", v)
+                                }
+                                OptionRow {
+                                    visible: Settings.data.nightAuto
+                                    width: sysCol.width
+                                    label: "Desde"
+                                    value: Settings.data.nightFrom
+                                    options: [
+                                        {
+                                            value: 19,
+                                            text: "19:00"
+                                        },
+                                        {
+                                            value: 20,
+                                            text: "20:00"
+                                        },
+                                        {
+                                            value: 21,
+                                            text: "21:00"
+                                        },
+                                        {
+                                            value: 22,
+                                            text: "22:00"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("nightFrom", v)
+                                }
+                                OptionRow {
+                                    visible: Settings.data.nightAuto
+                                    width: sysCol.width
+                                    label: "Hasta"
+                                    value: Settings.data.nightTo
+                                    options: [
+                                        {
+                                            value: 6,
+                                            text: "6:00"
+                                        },
+                                        {
+                                            value: 7,
+                                            text: "7:00"
+                                        },
+                                        {
+                                            value: 8,
+                                            text: "8:00"
+                                        },
+                                        {
+                                            value: 9,
+                                            text: "9:00"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("nightTo", v)
+                                }
+
+                                Section {
+                                    text: "VOLUMEN"
+                                    topPadding: 14
+                                    bottomPadding: 4
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Volumen máximo"
+                                    hint: "más de 100 % amplifica y puede distorsionar"
+                                    value: Settings.data.volMax
+                                    options: [
+                                        {
+                                            value: 100,
+                                            text: "100 %"
+                                        },
+                                        {
+                                            value: 120,
+                                            text: "120 %"
+                                        },
+                                        {
+                                            value: 150,
+                                            text: "150 %"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("volMax", v)
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Paso"
+                                    hint: "por cada pulsación de volumen"
+                                    value: Settings.data.volStep
+                                    options: [
+                                        {
+                                            value: 2,
+                                            text: "2 %"
+                                        },
+                                        {
+                                            value: 5,
+                                            text: "5 %"
+                                        },
+                                        {
+                                            value: 10,
+                                            text: "10 %"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("volStep", v)
                                 }
                             }
                         }

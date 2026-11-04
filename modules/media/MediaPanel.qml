@@ -427,7 +427,7 @@ PanelWindow {
                                     x: 1
                                     y: 1
                                     height: parent.height - 2
-                                    width: (parent.width - 2) * Audio.volume
+                                    width: (parent.width - 2) * Math.min(1, Audio.volume)
                                     gradient: Gradient {
                                         GradientStop {
                                             position: 0
