@@ -16,7 +16,9 @@ repo = [
   "libnotify", "pacman-contrib", "procps-ng",                       # notificaciones, actualizaciones, pgrep
   "foot",                                                           # terminal de "Quick buy"
   "cliphist", 
-  "wtype"
+  "wtype",
+  "hypridle",
+  "power-profiles-daemon"
 ]
 aur = []
 

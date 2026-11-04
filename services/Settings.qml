@@ -127,6 +127,13 @@ Singleton {
             property bool sounds: true          // false: sin sonidos
             property string cursorTheme: ""     // "" = el de variables.lua
             property int cursorSize: 24
+            property var keybinds: ({})         // atajos cambiados en Ajustes → Atajos
+            // Sistema → Energía (minutos; 0 = nunca)
+            property int idleLock: 5
+            property int idleDpms: 10
+            property int idleSuspend: 0
+            property string powerProfile: "balanced"   // power-saver | balanced | performance
+            property bool direPerformance: true         // modo Dire → rendimiento
             // Loadout
             property string mode: "radiant"
             property string terminal: "foot"
@@ -145,6 +152,7 @@ Singleton {
         root.loaded = true;
         applyCursor();                      // el cursor elegido gana al de variables.lua
         writeHypr(false);
+        Power.init();                       // hypridle de ancient y perfil de energía
     }
 
     Component.onCompleted: Qt.callLater(applyLoaded)

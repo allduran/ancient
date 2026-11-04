@@ -25,17 +25,97 @@ PanelWindow {
     color: "transparent"
 
     readonly property string home: Quickshell.env("HOME")
-    property string page: "talents"     // talents | wallpaper | theme | avatar | terminal | cursor | apps
+    property string page: "talents"     // talents | keys | sys | wallpaper | theme | avatar | terminal | cursor | apps
     property string appQuery: ""
     property var avatars: []
     property var terminals: []
     property var cursorThemes: []
 
+    // Atajos: acción que se está cambiando y modificadores marcados
+    property string capturing: ""
+    property var capMods: ["SUPER"]
+    property string keyQuery: ""
+
+    function startCapture(id) {
+        capturing = id;
+        capMods = ["SUPER"];
+        keys.forceActiveFocus();
+    }
+    function toggleMod(m) {
+        capMods = capMods.includes(m) ? capMods.filter(x => x !== m) : capMods.concat([m]);
+    }
+    // Nombre de la tecla como lo entiende Hyprland
+    function keyName(e) {
+        const k = e.key;
+        if ((k >= Qt.Key_A && k <= Qt.Key_Z) || (k >= Qt.Key_0 && k <= Qt.Key_9))
+            return String.fromCharCode(k);
+        if (k >= Qt.Key_F1 && k <= Qt.Key_F12)
+            return "F" + (k - Qt.Key_F1 + 1);
+        const m = {};
+        m[Qt.Key_Space] = "space";
+        m[Qt.Key_Tab] = "Tab";
+        m[Qt.Key_Return] = "Return";
+        m[Qt.Key_Enter] = "Return";
+        m[Qt.Key_Period] = "period";
+        m[Qt.Key_Comma] = "comma";
+        m[Qt.Key_Minus] = "minus";
+        m[Qt.Key_Equal] = "equal";
+        m[Qt.Key_Plus] = "plus";
+        m[Qt.Key_Slash] = "slash";
+        m[Qt.Key_Backslash] = "backslash";
+        m[Qt.Key_Semicolon] = "semicolon";
+        m[Qt.Key_Apostrophe] = "apostrophe";
+        m[Qt.Key_BracketLeft] = "bracketleft";
+        m[Qt.Key_BracketRight] = "bracketright";
+        m[Qt.Key_Left] = "Left";
+        m[Qt.Key_Right] = "Right";
+        m[Qt.Key_Up] = "Up";
+        m[Qt.Key_Down] = "Down";
+        m[Qt.Key_Delete] = "Delete";
+        m[Qt.Key_Insert] = "Insert";
+        m[Qt.Key_Home] = "Home";
+        m[Qt.Key_End] = "End";
+        m[Qt.Key_PageUp] = "Page_Up";
+        m[Qt.Key_PageDown] = "Page_Down";
+        m[Qt.Key_Print] = "Print";
+        return m[k] ?? "";
+    }
+    function capture(e) {
+        const action = Keybinds.actions.find(a => a.id === capturing);
+        if (e.key === Qt.Key_Escape) {
+            capturing = "";
+            return;
+        }
+        if (e.key === Qt.Key_Backspace) {          // quitar el atajo de ancient
+            Keybinds.assign(action, "");
+            capturing = "";
+            return;
+        }
+        const name = keyName(e);
+        if (name === "")
+            return;                                 // solo modificadores: seguir esperando
+        const mods = capMods.slice();
+        if (e.modifiers & Qt.MetaModifier && !mods.includes("SUPER"))
+            mods.push("SUPER");
+        if (e.modifiers & Qt.ControlModifier && !mods.includes("CTRL"))
+            mods.push("CTRL");
+        if (e.modifiers & Qt.AltModifier && !mods.includes("ALT"))
+            mods.push("ALT");
+        if (e.modifiers & Qt.ShiftModifier && !mods.includes("SHIFT"))
+            mods.push("SHIFT");
+        const order = ["SUPER", "CTRL", "ALT", "SHIFT"];
+        const combo = order.filter(m => mods.includes(m)).concat([name]).join(" + ");
+        Keybinds.assign(action, combo);
+        capturing = "";
+    }
+
     onVisibleChanged: {
         if (!visible)
             return;
         page = "talents";
+        capturing = "";
         Wallpapers.refresh();
+        Keybinds.refresh();
         scan.running = true;
         Qt.callLater(() => keys.forceActiveFocus());
     }
@@ -64,7 +144,10 @@ PanelWindow {
         id: keys
         focus: true
         Keys.onPressed: e => {
-            if (e.key === Qt.Key_Escape) {
+            if (win.capturing !== "") {
+                win.capture(e);
+                e.accepted = true;
+            } else if (e.key === Qt.Key_Escape) {
                 win.close();
                 e.accepted = true;
             }
@@ -297,7 +380,11 @@ PanelWindow {
                     }
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: win.page === "talents" ? "ÁRBOL DE TALENTOS · COMPORTAMIENTO" : "LOADOUT · APARIENCIA"
+                        text: ({
+                                talents: "ÁRBOL DE TALENTOS · COMPORTAMIENTO",
+                                keys: "ATAJOS · TECLAS DE ANCIENT",
+                                sys: "SISTEMA · ESTE EQUIPO"
+                            })[win.page] ?? "LOADOUT · APARIENCIA"
                         color: Theme.accentLight
                         font.pixelSize: 12
                         font.bold: true
@@ -356,7 +443,7 @@ PanelWindow {
 
                     Rectangle {
                         width: parent.width
-                        height: parent.height - 30 - 30 - 64 - 30
+                        height: parent.height - 30 - 30 - tabsCol.height - 30
                         border.width: 2
                         border.color: Theme.accentLight
                         gradient: Gradient {
@@ -407,72 +494,31 @@ PanelWindow {
                         }
                     }
 
-                    // Botón del árbol de talentos
-                    Rectangle {
+                    // Pestañas: talentos, atajos, sistema
+                    Column {
+                        id: tabsCol
                         width: parent.width
-                        height: 64
-                        border.width: win.page === "talents" ? 2 : 1
-                        border.color: win.page === "talents" ? Theme.accentLight : Theme.edge
-                        gradient: Gradient {
-                            GradientStop {
-                                position: 0
-                                color: Theme.dialTop
-                            }
-                            GradientStop {
-                                position: 1
-                                color: Theme.dialBot
-                            }
-                        }
-                        Row {
-                            anchors.centerIn: parent
-                            spacing: 12
-                            // Mini árbol
-                            Column {
-                                anchors.verticalCenter: parent.verticalCenter
-                                spacing: 3
-                                Repeater {
-                                    model: 4
-                                    Row {
-                                        required property int index
-                                        spacing: 3
-                                        Rectangle {
-                                            width: 10
-                                            height: 6
-                                            color: index % 2 === 0 ? Theme.accentLight : Theme.label
-                                        }
-                                        Rectangle {
-                                            width: 4
-                                            height: 6
-                                            color: Theme.accent
-                                        }
-                                        Rectangle {
-                                            width: 10
-                                            height: 6
-                                            color: index % 2 === 1 ? Theme.accentLight : Theme.label
-                                        }
-                                    }
-                                }
-                            }
-                            Column {
-                                anchors.verticalCenter: parent.verticalCenter
-                                Text {
-                                    text: "TALENTOS"
-                                    color: Theme.text
-                                    font.pixelSize: 16
-                                    font.bold: true
-                                    font.letterSpacing: 2
-                                }
-                                Text {
-                                    text: "comportamiento"
-                                    color: Theme.textMute
-                                    font.pixelSize: 11
-                                }
-                            }
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
+                        spacing: 4
+                        PageTab {
+                            width: parent.width
+                            label: "TALENTOS"
+                            sub: "comportamiento"
+                            active: win.page === "talents"
                             onClicked: win.page = "talents"
+                        }
+                        PageTab {
+                            width: parent.width
+                            label: "ATAJOS"
+                            sub: "teclas"
+                            active: win.page === "keys"
+                            onClicked: win.page = "keys"
+                        }
+                        PageTab {
+                            width: parent.width
+                            label: "SISTEMA"
+                            sub: "energía"
+                            active: win.page === "sys"
+                            onClicked: win.page = "sys"
                         }
                     }
                 }
@@ -677,6 +723,8 @@ PanelWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             text: ({
                                     talents: "TALENTOS",
+                                    keys: "ATAJOS",
+                                    sys: "SISTEMA",
                                     wallpaper: "FONDO",
                                     theme: "TEMA",
                                     avatar: "AVATAR",
@@ -697,6 +745,8 @@ PanelWindow {
                             }
                             text: ({
                                     talents: "elige un lado en cada nivel",
+                                    keys: "los que cambies aquí valen solo con ancient",
+                                    sys: Power.hasProfiles ? "perfil actual: " + Power.profile : "solo mientras ancient está activo",
                                     wallpaper: Wallpapers.list.length + " en ~/Pictures/Wallpapers",
                                     theme: "también con la R del HUD",
                                     avatar: "imágenes de ~/Pictures y ~/Pictures/Avatars",
@@ -909,6 +959,484 @@ PanelWindow {
                                             }
                                         }
                                     }
+                                }
+                            }
+                        }
+
+                        // ATAJOS
+                        Item {
+                            anchors.fill: parent
+                            visible: win.page === "keys"
+
+                            Rectangle {
+                                id: keySearch
+                                width: parent.width
+                                height: 30
+                                color: Theme.slot
+                                border.width: 1
+                                border.color: keyInput.activeFocus ? Theme.accent : Theme.edge
+                                TextInput {
+                                    id: keyInput
+                                    anchors {
+                                        fill: parent
+                                        leftMargin: 10
+                                        rightMargin: 10
+                                    }
+                                    verticalAlignment: TextInput.AlignVCenter
+                                    color: Theme.text
+                                    font.pixelSize: 14
+                                    clip: true
+                                    onTextChanged: win.keyQuery = text.toLowerCase()
+                                    Keys.onEscapePressed: win.close()
+                                    Text {
+                                        anchors.verticalCenter: parent.verticalCenter
+                                        visible: keyInput.text === ""
+                                        text: "Buscar acción o tecla…"
+                                        color: Theme.textMute
+                                        font.pixelSize: 14
+                                    }
+                                }
+                            }
+
+                            Flickable {
+                                anchors {
+                                    top: keySearch.bottom
+                                    topMargin: 8
+                                    left: parent.left
+                                    right: parent.right
+                                    bottom: keyFoot.top
+                                    bottomMargin: 8
+                                }
+                                clip: true
+                                contentWidth: width
+                                contentHeight: keyList.height
+                                boundsBehavior: Flickable.StopAtBounds
+
+                                Column {
+                                    id: keyList
+                                    width: parent.width
+                                    spacing: 4
+                                    Repeater {
+                                        model: Keybinds.actions.filter(a => win.keyQuery === "" || a.name.toLowerCase().includes(win.keyQuery) || Keybinds.combosFor(a).some(c => c.combo.toLowerCase().includes(win.keyQuery)))
+                                        Column {
+                                            id: krow
+                                            required property var modelData
+                                            required property int index
+                                            readonly property var all: Keybinds.actions.filter(a => win.keyQuery === "" || a.name.toLowerCase().includes(win.keyQuery) || Keybinds.combosFor(a).some(c => c.combo.toLowerCase().includes(win.keyQuery)))
+                                            readonly property bool firstOfGroup: index === 0 || all[index - 1].group !== modelData.group
+                                            readonly property bool editing: win.capturing === modelData.id
+                                            readonly property var combos: Keybinds.combosFor(modelData)
+                                            readonly property var clash: Keybinds.conflicts(Settings.data.keybinds[modelData.id] || "", modelData)
+                                            width: keyList.width
+                                            spacing: 4
+
+                                            Text {
+                                                visible: krow.firstOfGroup
+                                                topPadding: krow.index === 0 ? 0 : 8
+                                                text: krow.modelData.group
+                                                color: Theme.accentLight
+                                                font.pixelSize: 11
+                                                font.bold: true
+                                                font.letterSpacing: 2.2
+                                            }
+
+                                            Rectangle {
+                                                width: parent.width
+                                                height: 46
+                                                color: krow.editing ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.2) : Qt.rgba(0, 0, 0, 0.35)
+                                                border.width: 1
+                                                border.color: krow.editing ? Theme.accentLight : (krow.clash.length ? Theme.danger : Theme.edgeDark)
+
+                                                Column {
+                                                    id: kname
+                                                    x: 12
+                                                    width: 140
+                                                    anchors.verticalCenter: parent.verticalCenter
+                                                    Text {
+                                                        width: parent.width
+                                                        elide: Text.ElideRight
+                                                        text: krow.modelData.name
+                                                        color: Theme.text
+                                                        font.pixelSize: 14
+                                                        font.bold: true
+                                                    }
+                                                    Text {
+                                                        width: parent.width
+                                                        elide: Text.ElideRight
+                                                        text: krow.modelData.desc
+                                                        color: Theme.textMute
+                                                        font.pixelSize: 11
+                                                    }
+                                                }
+
+                                                // Normal: teclas actuales
+                                                Row {
+                                                    visible: !krow.editing
+                                                    anchors {
+                                                        left: kname.right
+                                                        leftMargin: 10
+                                                        verticalCenter: parent.verticalCenter
+                                                    }
+                                                    spacing: 8
+                                                    Repeater {
+                                                        model: krow.combos.slice(0, 2)
+                                                        Row {
+                                                            required property var modelData
+                                                            spacing: 5
+                                                            KeyChips {
+                                                                anchors.verticalCenter: parent.verticalCenter
+                                                                combo: modelData.combo
+                                                                edge: modelData.src === "ANCIENT" ? Theme.accent : Theme.edge
+                                                            }
+                                                            Rectangle {
+                                                                anchors.verticalCenter: parent.verticalCenter
+                                                                width: srcText.implicitWidth + 10
+                                                                height: 16
+                                                                color: "transparent"
+                                                                border.width: 1
+                                                                border.color: srcText.color
+                                                                Text {
+                                                                    id: srcText
+                                                                    anchors.centerIn: parent
+                                                                    text: modelData.src
+                                                                    color: modelData.src === "ANCIENT" ? Theme.accent : Theme.moon
+                                                                    font.pixelSize: 8
+                                                                    font.bold: true
+                                                                    font.letterSpacing: 1.2
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    Text {
+                                                        visible: krow.combos.length === 0
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        text: "sin atajo"
+                                                        color: Theme.label
+                                                        font.pixelSize: 12
+                                                    }
+                                                    Text {
+                                                        visible: krow.clash.length > 0
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        text: "⚠ también: " + krow.clash.join(", ")
+                                                        color: "#e07a6a"
+                                                        font.pixelSize: 11
+                                                        elide: Text.ElideRight
+                                                        width: 150
+                                                    }
+                                                }
+
+                                                // Cambiando: modificadores + tecla
+                                                Row {
+                                                    visible: krow.editing
+                                                    anchors {
+                                                        left: kname.right
+                                                        leftMargin: 10
+                                                        verticalCenter: parent.verticalCenter
+                                                    }
+                                                    spacing: 4
+                                                    Repeater {
+                                                        model: ["SUPER", "CTRL", "ALT", "SHIFT"]
+                                                        Rectangle {
+                                                            required property string modelData
+                                                            readonly property bool on: win.capMods.includes(modelData)
+                                                            width: modText.implicitWidth + 14
+                                                            height: 24
+                                                            color: on ? Qt.rgba(Theme.accent.r, Theme.accent.g, Theme.accent.b, 0.35) : "#0b0d10"
+                                                            border.width: 1
+                                                            border.color: on ? Theme.accentLight : Theme.edge
+                                                            Text {
+                                                                id: modText
+                                                                anchors.centerIn: parent
+                                                                text: modelData
+                                                                color: parent.on ? Theme.text : Theme.textMute
+                                                                font.family: "monospace"
+                                                                font.pixelSize: 11
+                                                                font.bold: true
+                                                            }
+                                                            MouseArea {
+                                                                anchors.fill: parent
+                                                                cursorShape: Qt.PointingHandCursor
+                                                                onClicked: {
+                                                                    win.toggleMod(modelData);
+                                                                    keys.forceActiveFocus();
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    Text {
+                                                        anchors.verticalCenter: parent.verticalCenter
+                                                        leftPadding: 6
+                                                        text: "+ pulsa la tecla…"
+                                                        color: Theme.text
+                                                        font.pixelSize: 13
+                                                        font.bold: true
+                                                    }
+                                                }
+
+                                                Rectangle {
+                                                    anchors {
+                                                        right: parent.right
+                                                        rightMargin: 10
+                                                        verticalCenter: parent.verticalCenter
+                                                    }
+                                                    width: editText.implicitWidth + 20
+                                                    height: 26
+                                                    color: Qt.rgba(0, 0, 0, 0.4)
+                                                    border.width: 1
+                                                    border.color: editArea.containsMouse ? Theme.accentLight : Theme.edge
+                                                    Text {
+                                                        id: editText
+                                                        anchors.centerIn: parent
+                                                        text: krow.editing ? "ESC" : "CAMBIAR"
+                                                        color: Theme.textSoft
+                                                        font.pixelSize: 10
+                                                        font.bold: true
+                                                        font.letterSpacing: 1.4
+                                                    }
+                                                    MouseArea {
+                                                        id: editArea
+                                                        anchors.fill: parent
+                                                        hoverEnabled: true
+                                                        cursorShape: Qt.PointingHandCursor
+                                                        onClicked: krow.editing ? win.capturing = "" : win.startCapture(krow.modelData.id)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Leyenda y restablecer
+                            Row {
+                                id: keyFoot
+                                anchors {
+                                    left: parent.left
+                                    bottom: parent.bottom
+                                }
+                                spacing: 8
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: "ANCIENT"
+                                    color: Theme.accent
+                                    font.pixelSize: 9
+                                    font.bold: true
+                                    font.letterSpacing: 1.2
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: "cambiado aquí"
+                                    color: Theme.textMute
+                                    font.pixelSize: 11
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    leftPadding: 8
+                                    text: "DOTFILES"
+                                    color: Theme.moon
+                                    font.pixelSize: 9
+                                    font.bold: true
+                                    font.letterSpacing: 1.2
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    text: "de tu keybinds.lua"
+                                    color: Theme.textMute
+                                    font.pixelSize: 11
+                                }
+                                Text {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    leftPadding: 8
+                                    text: "· Retroceso quita"
+                                    color: Theme.textMute
+                                    font.pixelSize: 11
+                                }
+                            }
+                            Rectangle {
+                                anchors {
+                                    right: parent.right
+                                    bottom: parent.bottom
+                                }
+                                width: resetText.implicitWidth + 20
+                                height: 26
+                                color: Qt.rgba(0, 0, 0, 0.4)
+                                border.width: 1
+                                border.color: resetArea.containsMouse ? Theme.accentLight : Theme.edge
+                                Text {
+                                    id: resetText
+                                    anchors.centerIn: parent
+                                    text: "RESTABLECER"
+                                    color: Theme.textSoft
+                                    font.pixelSize: 10
+                                    font.bold: true
+                                    font.letterSpacing: 1.4
+                                }
+                                MouseArea {
+                                    id: resetArea
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: Keybinds.resetAll()
+                                }
+                            }
+                        }
+
+                        // SISTEMA
+                        Flickable {
+                            anchors.fill: parent
+                            visible: win.page === "sys"
+                            clip: true
+                            contentWidth: width
+                            contentHeight: sysCol.height
+                            boundsBehavior: Flickable.StopAtBounds
+
+                            Column {
+                                id: sysCol
+                                width: parent.width
+                                spacing: 2
+
+                                Section {
+                                    text: "ENERGÍA"
+                                    bottomPadding: 4
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Bloquear"
+                                    hint: "sin tocar el equipo"
+                                    value: Settings.data.idleLock
+                                    options: [
+                                        {
+                                            value: 0,
+                                            text: "NUNCA"
+                                        },
+                                        {
+                                            value: 2,
+                                            text: "2 min"
+                                        },
+                                        {
+                                            value: 5,
+                                            text: "5 min"
+                                        },
+                                        {
+                                            value: 10,
+                                            text: "10 min"
+                                        },
+                                        {
+                                            value: 15,
+                                            text: "15 min"
+                                        },
+                                        {
+                                            value: 30,
+                                            text: "30 min"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("idleLock", v)
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Apagar la pantalla"
+                                    value: Settings.data.idleDpms
+                                    options: [
+                                        {
+                                            value: 0,
+                                            text: "NUNCA"
+                                        },
+                                        {
+                                            value: 5,
+                                            text: "5 min"
+                                        },
+                                        {
+                                            value: 10,
+                                            text: "10 min"
+                                        },
+                                        {
+                                            value: 15,
+                                            text: "15 min"
+                                        },
+                                        {
+                                            value: 30,
+                                            text: "30 min"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("idleDpms", v)
+                                }
+                                OptionRow {
+                                    width: sysCol.width
+                                    label: "Suspender"
+                                    value: Settings.data.idleSuspend
+                                    options: [
+                                        {
+                                            value: 0,
+                                            text: "NUNCA"
+                                        },
+                                        {
+                                            value: 15,
+                                            text: "15 min"
+                                        },
+                                        {
+                                            value: 30,
+                                            text: "30 min"
+                                        },
+                                        {
+                                            value: 60,
+                                            text: "1 h"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("idleSuspend", v)
+                                }
+
+                                Section {
+                                    text: "PERFIL DE ENERGÍA"
+                                    topPadding: 14
+                                    bottomPadding: 4
+                                }
+                                Text {
+                                    visible: !Power.hasProfiles
+                                    width: sysCol.width
+                                    wrapMode: Text.WordWrap
+                                    text: "power-profiles-daemon no está activo: sudo systemctl enable --now power-profiles-daemon"
+                                    color: Theme.textMute
+                                    font.pixelSize: 12
+                                }
+                                OptionRow {
+                                    visible: Power.hasProfiles
+                                    width: sysCol.width
+                                    label: "Perfil"
+                                    hint: "en modo Radiant"
+                                    value: Settings.data.powerProfile
+                                    options: [
+                                        {
+                                            value: "power-saver",
+                                            text: "AHORRO"
+                                        },
+                                        {
+                                            value: "balanced",
+                                            text: "EQUILIBRADO"
+                                        },
+                                        {
+                                            value: "performance",
+                                            text: "RENDIMIENTO"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("powerProfile", v)
+                                }
+                                OptionRow {
+                                    visible: Power.hasProfiles
+                                    width: sysCol.width
+                                    label: "En modo Dire"
+                                    hint: "al jugar"
+                                    value: Settings.data.direPerformance
+                                    options: [
+                                        {
+                                            value: true,
+                                            text: "RENDIMIENTO"
+                                        },
+                                        {
+                                            value: false,
+                                            text: "EL MISMO"
+                                        }
+                                    ]
+                                    onPicked: v => Settings.set("direPerformance", v)
                                 }
                             }
                         }

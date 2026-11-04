@@ -18,12 +18,15 @@ duran hypr init || warn "actualiza duran: falta 'duran hypr init'"
 step "bluetooth"
 sudo systemctl enable --now bluetooth.service 2>/dev/null || warn "no se pudo activar bluetooth.service"
 
+step "perfiles de energía"
+sudo systemctl enable --now power-profiles-daemon.service 2>/dev/null || warn "no se pudo activar power-profiles-daemon (¿tienes TLP?)"
+
 # ancient pinta su propio fondo
 step "hyprpaper desactivado"
 systemctl --user disable --now hyprpaper.service 2>/dev/null || true
 pkill -x hyprpaper 2>/dev/null || true
 
-# Otro demonio de notificaciones impide que ancient muestre las suyas
+# Otro daemon de notificaciones impide que ancient muestre las suyas
 for d in mako dunst swaync; do
     pgrep -x "$d" >/dev/null && warn "$d está corriendo: quítalo del autostart o ancient no mostrará notificaciones"
 done
