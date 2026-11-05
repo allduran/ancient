@@ -21,13 +21,21 @@ Singleton {
     // ── Escritura ──
     function set(key, value) {
         adapter[key] = value;
-        if (key === "floating")
+        if (key === "floating" || key.startsWith("dire"))
             writeHypr(true);
     }
 
-    // Lo que lee hypr/shell.lua: modo (colores de los bordes) y ventanas flotantes
+    // Lo que lee hypr/shell.lua: modo, ventanas flotantes y la build de Dire
     function writeHypr(reload) {
-        hyprWrite.command = ["sh", "-c", "mkdir -p \"$1\" && printf 'mode=%s\\nfloat=%s\\n' \"$2\" \"$3\" > \"$1/hypr\"" + (reload ? " && hyprctl reload >/dev/null" : ""), "sh", root.stateDir, adapter.mode, adapter.floating ? "1" : "0"];
+        const lines = [
+            "mode=" + adapter.mode,
+            "float=" + (adapter.floating ? "1" : "0"),
+            "direGaps=" + (adapter.direGaps ? "1" : "0"),
+            "direAnim=" + (adapter.direAnimations ? "1" : "0"),
+            "direBlur=" + (adapter.direBlur ? "1" : "0"),
+            "direVrr=" + adapter.direVrr
+        ];
+        hyprWrite.command = ["sh", "-c", "mkdir -p \"$(dirname \"$0\")\" && printf '%s\\n' \"$@\" > \"$0\"" + (reload ? " && hyprctl reload >/dev/null" : ""), root.stateDir + "/hypr"].concat(lines);
         hyprWrite.running = true;
     }
     Process {
@@ -141,6 +149,12 @@ Singleton {
             property int nightTo: 7             // hora de apagado
             property int volMax: 100            // % (más de 100 amplifica)
             property int volStep: 5             // % por pulsación
+            // Build de Dire: lo que cambia al pasar a modo juego
+            property bool direGaps: false       // false = sin huecos
+            property bool direAnimations: false
+            property bool direBlur: false
+            property int direVrr: 2             // 0 no · 1 siempre · 2 solo pantalla completa
+            property bool direGamemode: true    // gamemode activo mientras dure Dire
             // Loadout
             property string mode: "radiant"
             property string terminal: "foot"

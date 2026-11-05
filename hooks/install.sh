@@ -21,6 +21,9 @@ sudo systemctl enable --now bluetooth.service 2>/dev/null || warn "no se pudo ac
 step "perfiles de energía"
 sudo systemctl enable --now power-profiles-daemon.service 2>/dev/null || warn "no se pudo activar power-profiles-daemon (¿tienes TLP?)"
 
+step "gamemode"
+getent group gamemode >/dev/null && { id -nG "$USER" | grep -qw gamemode || sudo usermod -aG gamemode "$USER"; }
+
 # ancient pinta su propio fondo
 step "hyprpaper desactivado"
 systemctl --user disable --now hyprpaper.service 2>/dev/null || true

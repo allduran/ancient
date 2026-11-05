@@ -11,6 +11,7 @@ Singleton {
     readonly property var list: server.trackedNotifications.values   // todas (escudo)
     readonly property int count: list.length
     property var popups: []                                           // las que se ven ahora
+    property var times: ({})                                          // id → hora de llegada (registro)
 
     function hidePopup(n) {
         root.popups = root.popups.filter(p => p !== n);
@@ -33,6 +34,9 @@ Singleton {
 
         onNotification: n => {
             n.tracked = true;                                    // guardarla
+            const t = Object.assign({}, root.times);
+            t[n.id] = Date.now();
+            root.times = t;
             // Con No molestar solo se muestran las críticas (igual se guardan en el escudo)
             const quiet = Toggles.dnd || (Settings.data.quietDire && ShellState.mode === "dire");
             if (!quiet || n.urgency === NotificationUrgency.Critical) {

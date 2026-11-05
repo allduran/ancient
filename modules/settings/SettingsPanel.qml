@@ -25,7 +25,7 @@ PanelWindow {
     color: "transparent"
 
     readonly property string home: Quickshell.env("HOME")
-    property string page: "talents"     // talents | keys | sys | wallpaper | theme | avatar | terminal | cursor | apps
+    property string page: "talents"     // talents | keys | sys | dire | wallpaper | theme | avatar | terminal | cursor | apps
     property string appQuery: ""
     property var avatars: []
     property var terminals: []
@@ -383,7 +383,8 @@ PanelWindow {
                         text: ({
                                 talents: "ÁRBOL DE TALENTOS · COMPORTAMIENTO",
                                 keys: "ATAJOS · TECLAS DE ANCIENT",
-                                sys: "SISTEMA · ESTE EQUIPO"
+                                sys: "SISTEMA · ESTE EQUIPO",
+                                dire: "BUILD DIRE · MODO JUEGO"
                             })[win.page] ?? "LOADOUT · APARIENCIA"
                         color: Theme.accentLight
                         font.pixelSize: 12
@@ -519,6 +520,13 @@ PanelWindow {
                             sub: "energía · luz · sonido"
                             active: win.page === "sys"
                             onClicked: win.page = "sys"
+                        }
+                        PageTab {
+                            width: parent.width
+                            label: "BUILD DIRE"
+                            sub: "modo juego"
+                            active: win.page === "dire"
+                            onClicked: win.page = "dire"
                         }
                     }
                 }
@@ -725,6 +733,7 @@ PanelWindow {
                                     talents: "TALENTOS",
                                     keys: "ATAJOS",
                                     sys: "SISTEMA",
+                                    dire: "BUILD DIRE",
                                     wallpaper: "FONDO",
                                     theme: "TEMA",
                                     avatar: "AVATAR",
@@ -746,6 +755,7 @@ PanelWindow {
                             text: ({
                                     talents: "elige un lado en cada nivel",
                                     keys: "los que cambies aquí valen solo con ancient",
+                                    dire: "se aplica al pasar a Dire",
                                     sys: Power.hasProfiles ? "perfil actual: " + Power.profile : "solo mientras ancient está activo",
                                     wallpaper: Wallpapers.list.length + " en ~/Pictures/Wallpapers",
                                     theme: "también con la R del HUD",
@@ -1583,6 +1593,95 @@ PanelWindow {
                                         }
                                     ]
                                     onPicked: v => Settings.set("volStep", v)
+                                }
+                            }
+                        }
+
+                        // BUILD DIRE
+                        Flickable {
+                            anchors.fill: parent
+                            visible: win.page === "dire"
+                            clip: true
+                            contentWidth: width
+                            contentHeight: direCol.height
+                            boundsBehavior: Flickable.StopAtBounds
+
+                            Column {
+                                id: direCol
+                                width: parent.width
+                                spacing: 2
+
+                                Section {
+                                    text: "VENTANAS"
+                                    bottomPadding: 4
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "Huecos"
+                                    hint: "espacio entre ventanas"
+                                    value: Settings.data.direGaps
+                                    options: [{ value: true, text: "NORMALES" }, { value: false, text: "SIN HUECOS" }]
+                                    onPicked: v => Settings.set("direGaps", v)
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "Animaciones"
+                                    hint: "de Hyprland"
+                                    value: Settings.data.direAnimations
+                                    options: [{ value: true, text: "SÍ" }, { value: false, text: "NO" }]
+                                    onPicked: v => Settings.set("direAnimations", v)
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "Desenfoque"
+                                    hint: "blur de fondos y paneles"
+                                    value: Settings.data.direBlur
+                                    options: [{ value: true, text: "SÍ" }, { value: false, text: "NO" }]
+                                    onPicked: v => Settings.set("direBlur", v)
+                                }
+
+                                Section {
+                                    text: "RENDIMIENTO"
+                                    topPadding: 14
+                                    bottomPadding: 4
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "VRR"
+                                    hint: "frecuencia variable (FreeSync / G-Sync)"
+                                    value: Settings.data.direVrr
+                                    options: [{ value: 0, text: "NO" }, { value: 1, text: "SIEMPRE" }, { value: 2, text: "PANTALLA COMPLETA" }]
+                                    onPicked: v => Settings.set("direVrr", v)
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "Gamemode"
+                                    hint: "optimizaciones de Feral mientras dure Dire"
+                                    value: Settings.data.direGamemode
+                                    options: [{ value: true, text: "SÍ" }, { value: false, text: "NO" }]
+                                    onPicked: v => Settings.set("direGamemode", v)
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "Perfil de energía"
+                                    hint: Power.hasProfiles ? "power-profiles-daemon" : "power-profiles-daemon no está activo"
+                                    value: Settings.data.direPerformance
+                                    options: [{ value: true, text: "RENDIMIENTO" }, { value: false, text: "EL DE RADIANT" }]
+                                    onPicked: v => Settings.set("direPerformance", v)
+                                }
+
+                                Section {
+                                    text: "AVISOS"
+                                    topPadding: 14
+                                    bottomPadding: 4
+                                }
+                                OptionRow {
+                                    width: direCol.width
+                                    label: "Notificaciones"
+                                    hint: "también en Talentos, nivel 20"
+                                    value: Settings.data.quietDire
+                                    options: [{ value: false, text: "TODAS" }, { value: true, text: "SOLO CRÍTICAS" }]
+                                    onPicked: v => Settings.set("quietDire", v)
                                 }
                             }
                         }

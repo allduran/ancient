@@ -19,4 +19,5 @@ Singleton {
     property bool wallpaperOpen: false
     property bool settingsOpen: false
     property bool hudOpen: false         // HUD con atajo (talento HUD)
+    property bool notifsOpen: false
 }

@@ -1,7 +1,8 @@
 -- ancient — parte de Hyprland del shell. duran la enlaza en ~/.config/hypr/shell.lua
 -- al hacer `duran switch ancient`. theme = colores y ajustes que lee scheme/active.lua.
 
--- Lo que escribe ancient desde Ajustes: modo (radiant | dire) y ventanas flotantes (0 | 1)
+-- Lo que escribe ancient desde Ajustes: modo (radiant | dire), ventanas flotantes (0 | 1)
+-- y la build de Dire (direGaps, direAnim, direBlur, direVrr)
 local opts = {}
 local f = io.open(os.getenv("HOME") .. "/.local/state/ancient/hypr", "r")
 if f then
@@ -56,4 +57,16 @@ local themes = {
 	},
 }
 
-return { theme = themes[opts.mode] or themes.radiant }
+local theme = themes[opts.mode] or themes.radiant
+
+-- Build de Dire (Ajustes → Build Dire)
+if opts.mode == "dire" then
+	if opts.direGaps == "0" then
+		theme.gapsIn, theme.gapsOut = 0, 0
+	end
+	theme.animations = opts.direAnim == "1"
+	theme.blur = opts.direBlur == "1"
+	theme.vrr = tonumber(opts.direVrr) or theme.vrr
+end
+
+return { theme = theme }

@@ -56,6 +56,13 @@ Singleton {
         command: ["hypridle", "-c", root.conf]
     }
 
+    // ── Gamemode (build de Dire) ──
+    // `gamemoded -r` pide gamemode y lo mantiene mientras siga vivo
+    Process {
+        running: ShellState.mode === "dire" && Settings.data.direGamemode
+        command: ["gamemoded", "-r"]
+    }
+
     // ── Perfil de energía ──
     function applyProfile() {
         if (!root.hasProfiles)

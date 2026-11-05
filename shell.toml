@@ -18,7 +18,8 @@ repo = [
   "cliphist", 
   "wtype",
   "hypridle",
-  "power-profiles-daemon"
+  "power-profiles-daemon",
+  "gamemode"
 ]
 aur = []
 
@@ -52,6 +53,7 @@ wallpaper    = "qs -c ancient ipc call wallpaper toggle"
 settings     = "qs -c ancient ipc call settings toggle"
 hud          = "qs -c ancient ipc call hud toggle"
 minimize     = "qs -c ancient ipc call window minimize"
+notifs       = "qs -c ancient ipc call notifs toggle"
 
 [conflicts]
 shells = []

@@ -58,6 +58,13 @@ Singleton {
             call: "notifs clear"
         },
         {
+            id: "notifs",
+            group: "SHELL",
+            name: "Registro de avisos",
+            desc: "lista de notificaciones",
+            call: "notifs toggle"
+        },
+        {
             id: "lock",
             group: "SESIÓN",
             name: "Bloquear",

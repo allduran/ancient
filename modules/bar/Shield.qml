@@ -10,6 +10,7 @@ Item {
     property color bottomColor: Theme.positiveBot
     property color accent: Theme.positive
     signal clicked
+    signal rightClicked
 
     width: Theme.shieldW
     height: Theme.shieldH
@@ -82,7 +83,8 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: Qt.PointingHandCursor
-        onClicked: shield.clicked()
+        onClicked: m => m.button === Qt.RightButton ? shield.rightClicked() : shield.clicked()
     }
 }

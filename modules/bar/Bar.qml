@@ -140,7 +140,8 @@ PanelWindow {
             topColor: Theme.dangerTop
             bottomColor: Theme.dangerBot
             accent: Theme.danger
-            onClicked: Notifs.clearAll()
+            onClicked: ShellState.notifsOpen = !ShellState.notifsOpen   // abre el registro
+            onRightClicked: Notifs.clearAll()                           // clic derecho: borrar todo
         }
 
         PinnedApps {}

@@ -29,6 +29,9 @@ PanelWindow {
     readonly property bool onFocused: Hyprland.focusedMonitor !== null && Hyprland.focusedMonitor.name === modelData.name
     readonly property bool open: Settings.data.hudHover ? shown : (ShellState.hudOpen && onFocused)
 
+    // En modo Dire el borde no lo abre (para no estorbar al jugar)
+    readonly property bool hoverOn: Settings.data.hudHover && ShellState.mode !== "dire"
+
     function close() {
         shown = false;
         ShellState.hudOpen = false;
@@ -42,7 +45,7 @@ PanelWindow {
     }
 
     // Zona que recibe el ratón: oculto → 3 px del borde; visible → las piezas del HUD
-    mask: open ? fullRegion : (Settings.data.hudHover ? triggerRegion : emptyRegion)
+    mask: open ? fullRegion : (hud.hoverOn ? triggerRegion : emptyRegion)
     property Region emptyRegion: Region {}
     property Region triggerRegion: Region {
         item: trigger
@@ -87,7 +90,7 @@ PanelWindow {
     }
 
     HoverHandler {
-        enabled: Settings.data.hudHover
+        enabled: hud.hoverOn
         onHoveredChanged: {
             if (hovered) {
                 hideTimer.stop();

@@ -50,6 +50,7 @@ ShellRoot {
 
     // Popups de notificación (uno solo, en el monitor enfocado)
     NotificationPopups {}
+    NotificationLog {}
     Osd {}
     Armory {}
     LockScreen {}
@@ -74,6 +75,9 @@ ShellRoot {
         target: "notifs"
         function clear(): void {
             Notifs.clearAll();
+        }
+        function toggle(): void {
+            ShellState.notifsOpen = !ShellState.notifsOpen;
         }
     }
 
